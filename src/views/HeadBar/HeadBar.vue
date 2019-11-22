@@ -6,9 +6,11 @@
       <el-menu :default-active="activeIndex" class="el-menu-demo" 
           :background-color="themeColor" text-color="#fff" active-text-color="#ffd04b" mode="horizontal" @select="selectNavBar()">
         <el-menu-item index="1" @click="$router.push('/')"><i class="fa fa-home fa-lg"></i>  </el-menu-item>
-        <el-menu-item index="2" @click="openWindow('https://gitee.com/liuge1988/kitty')">"common.projectRepo"</el-menu-item>
-        <el-menu-item index="3" @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')">"common.doc"</el-menu-item>
-        <el-menu-item index="4" @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')">"common.blog"</el-menu-item>
+        <el-menu-item index="2" @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')">方案计划</el-menu-item>
+        <el-menu-item index="3" @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')">训练监控</el-menu-item>
+        <el-menu-item index="4" @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')">教学资源</el-menu-item>
+        <el-menu-item index="5" @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')">互动交流</el-menu-item>
+        <el-menu-item index="6" @click="$router.push('/sys')">系统管理</el-menu-item>
       </el-menu>
     </span>
      <!-- 工具栏 -->

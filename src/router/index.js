@@ -4,6 +4,8 @@ import Cookies from "js-cookie"
 import Login from '@/views/Login'
 import NotFound from '@/views/Error/404'
 import Home from '@/views/Home'
+import Sys from '@/views/Sys'
+import PlanSchedule from '@/views/PlanSchedule'
 import Intro from '@/views/Intro/Intro'
 import Generator from '@/views/Generator/Generator'
 import api from '@/http/api'
@@ -19,6 +21,27 @@ const router = new Router({
       path: '/',
       name: '首页',
       component: Home,
+      children: [
+        { 
+          path: '', 
+          name: '系统介绍', 
+          component: Intro,
+          meta: {
+            icon: 'fa fa-home fa-lg',
+            index: 0
+          }
+        }
+      ]
+    },
+    {
+      path: '/sys',
+      name: '首页',
+      component: Sys,
+    },
+    {
+      path: '/planSchedule',
+      name: '方案计划',
+      component: PlanSchedule,
       children: [
         { 
           path: '', 

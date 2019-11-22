@@ -1,12 +1,9 @@
 <template>
   <div class="container">
+     <!-- 头部区域 -->
+    <head-bar></head-bar>
     <div>
-      <!-- 头部区域 -->
-      <head-bar></head-bar>
-       <!-- 导航菜单栏 -->
-      <nav-bar></nav-bar>
-      <!-- 主内容区域 -->
-      <main-content></main-content>
+       <iframe src="/sys/dept" />
     </div>
   </div>
 </template>
