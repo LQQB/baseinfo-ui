@@ -4,13 +4,15 @@
         <!-- 导航菜单 -->
     <span class="navbar">
       <el-menu :default-active="activeIndex" class="el-menu-demo" 
-          :background-color="themeColor" text-color="#fff" active-text-color="#ffd04b" mode="horizontal" @select="selectNavBar()">
-        <el-menu-item index="1" @click="$router.push('/')"><i class="fa fa-home fa-lg"></i>  </el-menu-item>
+          :background-color="themeColor" text-color="#fff" active-text-color="#ffd04b" mode="horizontal" @select="selectNavBar">
+        <!-- <el-menu-item index="1" @click="$router.push('/')"><i class="fa fa-home fa-lg"></i>  </el-menu-item>
         <el-menu-item index="2" @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')">方案计划</el-menu-item>
         <el-menu-item index="3" @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')">训练监控</el-menu-item>
         <el-menu-item index="4" @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')">教学资源</el-menu-item>
         <el-menu-item index="5" @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')">互动交流</el-menu-item>
-        <el-menu-item index="6" @click="$router.push('/sys')">系统管理</el-menu-item>
+        <el-menu-item index="6" @click="$router.push('/sys')">系统管理</el-menu-item> -->
+        <el-menu-item index="1" @click="$router.push('/')"><i class="fa fa-home fa-lg"></i>  </el-menu-item>
+        <el-menu-item @click="$router.push(item.url)" v-for="(item,index) in menuBar" :key="item.name" :index= "String(index+2)">{{item.name}}</el-menu-item>
       </el-menu>
     </span>
      <!-- 工具栏 -->
@@ -47,6 +49,13 @@ export default {
         role: "超级管理员",
         registeInfo: "注册时间：2018-12-20 "
       },
+      menuBar: [
+        {name: '方案计划',url: '/ps',index: 1},
+        {name: '训练监控',url: '/tm',index: 46},
+        {name: '教学资源',url: '/tr',index: 100},
+        {name: '互动交流',url: '/ic',index: 200},
+        {name: '系统管理',url: '/sys',index: 300}
+      ],
       liItem: ['1','2','3'],
       activeIndex: '2'
     }
@@ -65,7 +74,9 @@ export default {
       this.$store.commit('setThemeColor', themeColor)
     },
     selectNavBar(key, keyPath) {
-      console.log(key, keyPath)
+      this.$store.commit('setMenuBarSelectedIndex', key)
+      console.log(key)
+      console.log(keyPath)
     },
     openWindow(url) {
       window.open(url)

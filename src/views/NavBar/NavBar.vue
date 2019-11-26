@@ -23,12 +23,25 @@ export default {
         MenuTree
   },
   computed: {
+    navTree() {
+      let _navTree = [];
+      let navTreeRef = this.$store.state.menu.navTree;
+      let menuBarSelectedIndex = this.$store.state.app.menuBarSelectedIndex;
+      for(let i = 0; i < navTreeRef.length; i ++ ){
+        if (navTreeRef[i].id == menuBarSelectedIndex){
+          _navTree.push(navTreeRef[i])
+          break;
+        }
+      }
+      return _navTree;
+    },
     ...mapState({
       appName: state=>state.app.appName,
       themeColor: state=>state.app.themeColor,
-      collapse: state=>state.app.collapse,
-      navTree: state=>state.menu.navTree
+      collapse: state=>state.app.collapse
+      // navTree: state=>state.menu.navTree
     }),
+    
     mainTabs: {
       get () { return this.$store.state.tab.mainTabs },
       set (val) { this.$store.commit('updateMainTabs', val) }
@@ -52,7 +65,7 @@ export default {
       console.log('handleclose')
     },
     handleselect(a, b) {
-      console.log('handleselect')
+      console.log('navBar:' + a + ';'+ b);
     },
     // 路由操作处理
     handleRoute (route) {

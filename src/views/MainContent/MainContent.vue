@@ -1,5 +1,6 @@
 <template>
   <div id="main-container" class="main-container" :class="$store.state.app.collapse?'position-collapse-left':'position-left'">
+    <!-- <div style="color:red;"><breadcrumbNav></breadcrumbNav></div> -->
     <!-- 标签页 -->
     <div class="tab-container">
       <el-tabs class="tabs" :class="$store.state.app.collapse?'position-collapse-left':'position-left'"
@@ -32,7 +33,11 @@
 </template>
 
 <script>
+import breadcrumbNav from '@/components/BreadCrumb';//面包屑
 export default {
+  components: {
+    breadcrumbNav
+  },
   data () {
     return {
     }

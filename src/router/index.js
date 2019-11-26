@@ -4,14 +4,16 @@ import Cookies from "js-cookie"
 import Login from '@/views/Login'
 import NotFound from '@/views/Error/404'
 import Home from '@/views/Home'
-import Sys from '@/views/Sys'
 import PlanSchedule from '@/views/PlanSchedule'
+import TrainMonitor from '@/views/TrainMonitor'
+import SysManage from '@/views/SysManage'
 import Intro from '@/views/Intro/Intro'
 import Generator from '@/views/Generator/Generator'
 import api from '@/http/api'
 import store from '@/store'
 import { getIFramePath, getIFrameUrl } from '@/utils/iframe'
-
+import IFrame from '@/views/IFrame/IFrame'
+import IFrameContent from '@/views/IFrameContent'
 Vue.use(Router)
 
 const router = new Router({
@@ -34,14 +36,41 @@ const router = new Router({
       ]
     },
     {
-      path: '/sys',
-      name: '首页',
-      component: Sys,
+      path: '/ps',
+      name: '方案计划',
+      component: Home,
+      children: [
+        { 
+          path: '', 
+          name: '系统介绍', 
+          component: Intro,
+          meta: {
+            icon: 'fa fa-home fa-lg',
+            index: 0
+          }
+        }
+      ]
     },
     {
-      path: '/planSchedule',
-      name: '方案计划',
-      component: PlanSchedule,
+      path: '/tm',
+      name: '训练监控',
+      component: Home,
+      children: [
+        { 
+          path: '', 
+          name: '系统介绍', 
+          component: Intro,
+          meta: {
+            icon: 'fa fa-home fa-lg',
+            index: 0
+          }
+        }
+      ]
+    },
+    {
+      path: '/sys',
+      name: '系统管理',
+      component: Home,
       children: [
         { 
           path: '', 
@@ -180,6 +209,7 @@ function addDynamicRoutes (menuList = [], routes = []) {
         // 如果是嵌套页面, 通过iframe展示
         route['path'] = path
         route['component'] = resolve => require([`@/views/IFrame/IFrame`], resolve)
+        // route['component'] = IFrame
         // 存储嵌套页面路由路径和访问URL
         let url = getIFrameUrl(menuList[i].url)
         let iFrameUrl = {'path':path, 'url':url}

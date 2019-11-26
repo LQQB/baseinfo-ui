@@ -1,13 +1,10 @@
 <template>
   <div class="container">
-    <div>
-      <!-- 头部区域 -->
-      <!-- <head-bar></head-bar> -->
-       <!-- 导航菜单栏 -->
-      <nav-bar></nav-bar>
-      <!-- 主内容区域 -->
-      <main-content></main-content>
-    </div>
+    <!-- 头部区域 -->
+    <head-bar></head-bar>
+    <nav-bar></nav-bar>
+    <main-content></main-content> 
+    
   </div>
 </template>
 
