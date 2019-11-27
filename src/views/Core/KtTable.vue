@@ -4,8 +4,8 @@
     <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange" 
           @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="$t('action.loading')" :border="border" :stripe="stripe"
           :show-overflow-tooltip="showOverflowTooltip" :max-height="maxHeight" :height="height" :size="size" :align="align" style="width:100%;" >
-      <el-table-column type="selection" width="40" v-if="showBatchDelete & showOperation"></el-table-column>
-      <el-table-column v-for="column in columns" header-align="center" align="center"
+      <!-- <el-table-column type="selection" width="40" v-if="showBatchDelete & showOperation"></el-table-column> -->
+      <el-table-column v-for="column in columnArray" header-align="center" align="center"
         :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
         :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter"
         :sortable="column.sortable==null?true:column.sortable">
@@ -36,6 +36,11 @@ export default {
 			KtButton
 	},
   props: {
+    autoLoad: {
+      type: Boolean, //是否自动加载数据
+      default: true
+
+    },
     columns: Array, // 表格列配置
     data: Object, // 表格分页数据
     permsEdit: String,  // 编辑权限标识
@@ -80,6 +85,15 @@ export default {
       type: Boolean,
       default: true
     }
+  },
+  computed:{
+    columnArray: function() {
+      return this.columns.filter(function(item) {
+        if (typeof(item.show) == 'undefined' || (item.show)){
+          return item
+         }
+       })
+     } 
   },
   data() {
     return {
@@ -154,7 +168,11 @@ export default {
 		}
   },
   mounted() {
-    this.refreshPageRequest(1)
+    //可以配置装载组件的时候不要加载数据
+    //this.refreshPageRequest(1)
+    if ((typeof(this.autoLoad) == 'undefined') || this.autoLoad){
+      this.refreshPageRequest(1)
+    }
   }
 }
 </script>

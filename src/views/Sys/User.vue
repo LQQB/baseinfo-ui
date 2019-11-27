@@ -246,7 +246,7 @@ export default {
       	initColumns: function () {
 			this.columns = [
 				{prop:"id", label:"ID", minWidth:50},
-				{prop:"name", label:"用户名", minWidth:120},
+				{prop:"name", label:"用户名", minWidth:120,show: false},
 				{prop:"deptName", label:"单位", minWidth:120},
 				{prop:"roleNames", label:"角色", minWidth:100},
 				{prop:"email", label:"邮箱", minWidth:120},
