@@ -86,6 +86,14 @@ export default {
       default: true
     }
   },
+  watch:{
+    autoLoad: function(){
+      console.log("property is changed!")
+      if (this.autoLoad){
+        this.refreshPageRequest(1)
+      }
+    }
+  },
   computed:{
     columnArray: function() {
       return this.columns.filter(function(item) {

@@ -1,9 +1,9 @@
 <template>
   <div class="page-container">
-    <el-tabs type="border-card">
-      <el-tab-pane v-for='item in planCategoryTabs' :label='item.label' :key='item.label'>
+    <el-tabs type="border-card" @tab-click="tabClick" v-model="activeName">
+      <el-tab-pane v-for='item in planCategoryTabs' :label='item.label' :key='item.category' :name='item.label'>
 	    <!--表格内容栏-->
-	      <kt-table :height="350" :data="pageResult" @findPage="findPage" :columns="filterColumns" :autoLoad=false>
+	      <kt-table :height="350" :data="pageResult" @findPage="findPage" :columns="filterColumns" :autoLoad='item.load'>
 	      </kt-table>
       </el-tab-pane>
     </el-tabs>
@@ -17,6 +17,9 @@ import Cookies from "js-cookie";
 import config from "@/http/config";
 import axios from "axios";
 export default {
+  mounted() {
+     console.log("this comp")
+  },
   components: {
     TableColumnFilterDialog,
     KtButton,
@@ -24,11 +27,12 @@ export default {
   },
   data() {
     return {
+      activeName: "年度方案",
       planCategoryTabs: [
-        {label: '年度方案'},
-        {label: '阶段方案'},
-        {label: '综合方案'},
-        {label: '具体工作方案'}
+        {label: '年度方案',category: '1',load: true},
+        {label: '阶段方案',category: '2',load: false},
+        {label: '综合方案',category: '3',load: false},
+        {label: '具体工作方案',category: '4',load: false}
       ],
       columns: [],
 			filterColumns: [],
@@ -51,6 +55,16 @@ export default {
     };
   },
   methods: {
+    tabClick: function(tab){
+      console.log("tab" + tab.label + ";" + tab.name)
+      for(let i = 0; i < this.planCategoryTabs.length; i++){
+        if (this.planCategoryTabs[i].label == tab.label){
+          this.planCategoryTabs[i].load = true
+          break;
+        }
+      }
+
+    },
 		// 获取分页数据
 		findPage: function (data) {
 			if(data !== null) {
@@ -167,7 +181,23 @@ export default {
         //   this.$message({message: '模板文件下载失败', type: 'error'})
         // })
       }
-    }
+    },
+    		// 显示新增界面
+		handleAdd: function () {
+			this.dialogVisible = true
+			this.operation = true
+			this.dataForm = {
+				id: 0,
+				name: '',
+				password: '',
+				deptId: 1,
+				deptName: '',
+				email: 'test@qq.com',
+				mobile: '13889700023',
+				status: 1,
+				userRoles: []
+			}
+		},
   },
   mounted() {
     this.initColumns()
