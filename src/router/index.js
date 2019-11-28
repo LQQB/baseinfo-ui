@@ -4,6 +4,7 @@ import Cookies from "js-cookie"
 import Login from '@/views/Login'
 import NotFound from '@/views/Error/404'
 import Home from '@/views/Home'
+import Test from '@/views/Test'
 import PlanSchedule from '@/views/PlanSchedule'
 import TrainMonitor from '@/views/TrainMonitor'
 import SysManage from '@/views/SysManage'
@@ -92,6 +93,11 @@ const router = new Router({
       path: '/404',
       name: 'notFound',
       component: NotFound
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: Test
     }
   ]
 })
