@@ -10,7 +10,8 @@ import * as dict from './moudules/dict'
 import * as log from './moudules/log'
 import * as template from './moudules/template'
 import * as sysPlan from './moudules/sysPlan'
-
+import * as sysSchedule from './moudules/sysSchedule'
+import * as trainBatch from './moudules/trainBatch'
 
 // 默认全部导出
 export default {
@@ -22,5 +23,7 @@ export default {
     dict,
     log,
     template,
-    sysPlan
+    sysPlan,
+    sysSchedule,
+    trainBatch
 }

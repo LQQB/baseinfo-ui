@@ -51,10 +51,11 @@ export default {
       },
       menuBar: [
         {name: '方案计划',url: '/ps',index: 1},
+        {name: '训练档案',url: '/td',index: 400},
         {name: '训练监控',url: '/tm',index: 46},
         {name: '教学资源',url: '/tr',index: 100},
         {name: '互动交流',url: '/ic',index: 200},
-        {name: '系统管理',url: '/sys',index: 300}
+        {name: '系统管理',url: '/sys',index: 6}
       ],
       liItem: ['1','2','3'],
       activeIndex: '2'
@@ -102,6 +103,7 @@ export default {
 }
 .toolbar {
   float: right;
+  height: 60px;
 }
 .lang-item {
   font-size: 16px;

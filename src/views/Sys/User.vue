@@ -36,24 +36,30 @@
 		</table-column-filter-dialog>
 	</div>
 	<!--表格内容栏-->
-	<kt-table :height="350" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
+	<kt-table :height="tabHeight" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
 		:data="pageResult" :columns="filterColumns"
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
 	<!--新增编辑界面-->
-	<el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
+	<el-dialog :title="operation?'新增':'编辑'" width="70%" :visible.sync="dialogVisible" :close-on-click-modal="false">
 		<el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
 			label-position="right">
+			<el-row>
+				<el-col :span="8">
 			<el-form-item label="ID" prop="id" v-if="false">
 				<el-input v-model="dataForm.id" :disabled="true" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="用户名" prop="name">
+			<el-form-item label="账户名" prop="name">
 				<el-input v-model="dataForm.name" auto-complete="off"></el-input>
 			</el-form-item>
+			</el-col>
+			<el-col :span="8">
 			<el-form-item label="密码" prop="password">
 				<el-input v-model="dataForm.password" type="password" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="单位" prop="deptName">
+			</el-col>
+			<el-col :span="8">
+				<el-form-item label="所属单位" prop="deptName">
 				<popup-tree-input 
 					:data="deptData" 
 					:props="deptTreeProps" 
@@ -62,12 +68,84 @@
 					:currentChangeHandle="deptTreeCurrentChangeHandle">
 				</popup-tree-input>
 			</el-form-item>
-			<el-form-item label="邮箱" prop="email">
-				<el-input v-model="dataForm.email" auto-complete="off"></el-input>
-			</el-form-item>
-			<el-form-item label="手机" prop="mobile">
-				<el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
-			</el-form-item>
+			</el-col>
+			</el-row>
+            <el-row>
+				<el-col :span="8">
+  			       <el-form-item label="性别" prop="sex">
+					  <el-radio v-model="dataForm.sex" label="1">男</el-radio>
+                      <el-radio v-model="dataForm.sex" label="2">女</el-radio>
+			        </el-form-item>
+				</el-col>
+				<el-col :span="8">
+					<el-form-item label="政治面貌" prop="politicalStatus">
+						<el-select v-model="dataForm.politicalStatus" placeholder="请选择">
+							<el-option
+                              v-for="item in politicalStatus"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="8">
+					<el-form-item label="年龄" prop="age">
+						<el-input v-model="dataForm.age" auto-complete="off"></el-input>
+					</el-form-item>
+				</el-col>
+            </el-row>
+            <el-row>
+				<el-col :span="8">
+					<el-form-item label="籍贯" prop="birthPlace">
+						<el-select v-model="dataForm.native" placeholder="请选择">
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="8">
+					<el-form-item label="职别" prop="officeRank">
+						<el-select v-model="dataForm.native" placeholder="请选择">
+						</el-select>
+					</el-form-item>
+				</el-col>
+				<el-col :span="8">
+					<el-form-item label="军衔" prop="militaryRank">
+						<el-select v-model="dataForm.native" placeholder="请选择">
+						</el-select>
+					</el-form-item>
+				</el-col>
+            </el-row> 
+			<el-row>
+				<el-col :span="8">
+					<el-form-item label="人员类别" prop="personType">
+						<el-select v-model="dataForm.personType" placeholder="请选择">
+                            <el-option
+                              v-for="item in personType"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+            <el-row>
+				<el-col :span="8">
+				<el-form-item label="身高" prop="height">
+					<el-input v-model="dataForm.height" auto-complete="off"></el-input>
+				</el-form-item>
+				</el-col>
+				<el-col :span="8">
+				<el-form-item label="体重" prop="weight">
+					<el-input v-model="dataForm.weight" auto-complete="off"></el-input>
+				</el-form-item>
+				</el-col>
+				<el-col :span="8">
+				<el-form-item label="视力" prop="vision">
+					<el-input v-model="dataForm.vision" auto-complete="off"></el-input>
+				</el-form-item>
+				</el-col>
+            </el-row>	
 			<el-form-item label="角色" prop="userRoles" v-if="!operation">
 				<el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
 					 style="width: 100%;">
@@ -115,6 +193,12 @@ export default {
 			dataFormRules: {
 				name: [
 					{ required: true, message: '请输入用户名', trigger: 'blur' }
+				],
+				password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+				],
+				deptName: [
+					{ required: true, message: '请选择单位', trigger: 'blur' }
 				]
 			},
 			// 新增编辑界面数据
@@ -134,7 +218,19 @@ export default {
 				label: 'name',
 				children: 'children'
 			},
-			roles: []
+			roles: [],
+			psOptions: [],
+			personType:[
+				{label: '新兵', value: '1'},
+				{label: '学兵', value: '2'},
+				{label: '干部', value: '3'}
+			],
+			politicalStatus:[
+				{label: '党员', value: '1'},
+				{label: '团员', value: '2'},
+				{label: '群众', value: '3'}
+			],
+			tabHeight: 350
 		}
 	},
 	methods: {
@@ -213,6 +309,9 @@ export default {
 								this.$message({message: '操作失败, ' + res.msg, type: 'error'})
 							}
 							this.findPage(null)
+						},(error) => {
+							this.editLoading = false
+							this.$message({message: '操作失败, ' + error, type: 'error'})
 						})
 					})
 				}
@@ -245,24 +344,52 @@ export default {
 		// 处理表格列过滤显示
       	initColumns: function () {
 			this.columns = [
-				{prop:"id", label:"ID", minWidth:50},
-				{prop:"name", label:"用户名", minWidth:120,show: false},
-				{prop:"deptName", label:"单位", minWidth:120},
+				{prop:"id", label:"ID", minWidth:50,show: false},
+				{prop:"name", label:"账户名", minWidth:120},
+				{prop:"deptName", label:"所属单位", minWidth:120},
+				{prop:"sex", label:"性别", minWidth:120, formatter: this.sexFormatter},
+				{prop:"politicalStatus", label:"政治面貌", minWidth:120, formatter: this.politicalStatusFormatter},
+				{prop:"age", label:"年龄", minWidth:120},
+				{prop:"birthPlace", label:"籍贯", minWidth:120},
+				{prop:"officeRank", label:"职别", minWidth:120},
+				{prop:"militaryRank", label:"军衔", minWidth:120},
+				{prop:"personType", label:"人员类别", minWidth:120},
+				{prop:"height", label:"身高", minWidth:120},
+				{prop:"weight", label:"体重", minWidth:120},
+				{prop:"vision", label:"视力", minWidth:120},
 				{prop:"roleNames", label:"角色", minWidth:100},
-				{prop:"email", label:"邮箱", minWidth:120},
-				{prop:"mobile", label:"手机", minWidth:100},
 				{prop:"status", label:"状态", minWidth:70},
 				// {prop:"createBy", label:"创建人", minWidth:120},
 				// {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
 				// {prop:"lastUpdateBy", label:"更新人", minWidth:100},
 				// {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 			]
-			this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      	}
+			// this.filterColumns = JSON.parse(JSON.stringify(this.columns));
+			this.filterColumns = this.columns;
+      	},
+        sexFormatter: function(row, column, cellValue, index) {
+           return row.sex === "1" ? '男' : row.sex === "2" ? '女' : '未知'
+		 },
+		politicalStatusFormatter: function(row, column, cellValue, index) {
+           return row.politicalStatus === "1" ? '党员' : row.politicalStatus === "2" ? '团员' : row.politicalStatus === '3' ? '群众' :'未知'
+		},
+		//初始化下拉框的数据
+		initData: function() {
+		   //政治面貌
+		   this.$api.dict.getValue("plan_type").then((res) => {
+				this.psOptions = res.data
+				
+			});
+		},
+		initView: function(){
+			this.tabHeight = window.innerHeight - 160
+		}
 	},
 	mounted() {
 		this.findDeptTree()
 		this.initColumns()
+		this.initData()
+		this.initView()
 	}
 }
 </script>

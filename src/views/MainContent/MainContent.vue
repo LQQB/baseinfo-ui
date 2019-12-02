@@ -22,7 +22,7 @@
       </el-tabs>
     </div>
     <!-- 主内容区域 -->
-    <div class="main-content">
+    <div class="main-content" ref="mainContent">
       <keep-alive>
         <transition name="fade" mode="out-in">
             <router-view></router-view>

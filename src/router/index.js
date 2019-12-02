@@ -53,6 +53,22 @@ const router = new Router({
       ]
     },
     {
+      path: '/td',
+      name: '训练档案',
+      component: Home,
+      children: [
+        { 
+          path: '', 
+          name: '系统介绍', 
+          component: Intro,
+          meta: {
+            icon: 'fa fa-home fa-lg',
+            index: 0
+          }
+        }
+      ]
+    },
+    {
       path: '/tm',
       name: '训练监控',
       component: Home,
@@ -150,6 +166,7 @@ function addDynamicMenuAndRoutes(userName, to, from) {
   }).then(res => {
     api.user.findPermissions({'name':userName}).then(res => {
       // 保存用户权限标识集合
+      res.data.push('permsDownload')
       store.commit('setPerms', res.data)
     })
   })

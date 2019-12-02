@@ -12,15 +12,13 @@
       </el-table-column>
       <el-table-column :label="$t('action.operation')" width="185" fixed="right" v-if="showOperation" header-align="center" align="center">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" :label="$t('action.edit')" :perms="permsEdit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" :perms="permsDelete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
+          <kt-button icon="fa el-icon-download" label="下载" :perms="permsDownload" :size="size" @click="handleDownload(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" label="删除" :perms="permsDelete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
     <!--分页栏-->
-    <div class="toolbar" style="padding:10px;height:30px;">
-      <kt-button :label="$t('action.batchDelete')" :perms="permsDelete" :size="size" type="danger" @click="handleBatchDelete()" 
-        :disabled="this.selections.length===0" style="float:left;" v-if="showBatchDelete & showOperation"/>
+    <div class="toolbar" style="padding:10px;">
       <el-pagination layout="total, prev, pager, next, jumper" @current-change="refreshPageRequest" 
         :current-page="pageRequest.pageNum" :page-size="pageRequest.pageSize" :total="data.totalSize" style="float:right;">
       </el-pagination>
@@ -31,7 +29,7 @@
 <script>
 import KtButton from "@/views/Core/KtButton"
 export default {
-  name: 'KtTable',
+  name: 'PsTable',
   components:{
 			KtButton
 	},
@@ -43,7 +41,7 @@ export default {
     },
     columns: Array, // 表格列配置
     data: Object, // 表格分页数据
-    permsEdit: String,  // 编辑权限标识
+    permsDownload: String,  // 编辑权限标识
     permsDelete: String,  // 删除权限标识
     size: { // 尺寸样式
       type: String,
@@ -88,6 +86,7 @@ export default {
   },
   watch:{
     autoLoad: function(){
+      console.log("property is changed!")
       if (this.autoLoad){
         this.refreshPageRequest(1)
       }
@@ -136,9 +135,9 @@ export default {
       this.pageRequest.pageNum = pageNum
       this.findPage()
     },
-    // 编辑
-		handleEdit: function (index, row) {
-      this.$emit('handleEdit', {index:index, row:row})
+    // 下载
+		handleDownload: function (index, row) {
+      this.$emit('handleDownload', {index:index, row:row})
 		},
     // 删除
 		handleDelete: function (index, row) {
@@ -185,10 +184,5 @@ export default {
 </script>
 
 <style scoped>
-.clearfix:after {
-content: "\0020";
-display: block;
-height: 0;
-clear: both;
-}
+
 </style>

@@ -5,7 +5,7 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
 		 <el-form :inline="true" :model="filters" :size="size">
 			<el-form-item>
-				<kt-button icon="fa fa-search el-icon-download" :label="$t('action.templateDownload')" perms="sys:role:view" type="primary" @click="handleTemplateDownload"/>
+				<kt-button icon="fa fa-search el-icon-download" label="下载方案模板" perms="sys:role:view" type="primary" @click="handleTemplateDownload"/>
 			</el-form-item>
 			<el-form-item>
               <el-upload
@@ -25,7 +25,7 @@
                   :icon="uploadBtnIcon"
                   size="mini"
                   type="primary"
-                >上传</el-button>
+                >上传方案</el-button>
               </el-upload>
 				
 			</el-form-item>
@@ -35,36 +35,37 @@
     <el-tabs type="border-card" @tab-click="tabClick" v-model="activeName">
       <el-tab-pane v-for='item in planCategoryTabs' :label='item.label' :key='item.category' :name='item.category'>
 	    <!--表格内容栏-->
-	      <kt-table :height="350" :data="pageResult" @findPage="findPage" :columns="filterColumns" :autoLoad='item.load'>
-	      </kt-table>
+	      <ps-table :height="350" :data="item.pageResult" @findPage="findPage" 
+                  :columns="filterColumns" :autoLoad='item.load'
+                  permsDownload="permsDownload"
+                  @handleDownload="handleDownload">
+	      </ps-table>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import KtTable from "@/views/Core/KtTable"
+import PsTable from "./PsTable"
 import KtButton from "@/views/Core/KtButton";
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog";
 import Cookies from "js-cookie";
 import config from "@/http/config";
 import axios from "axios";
+import {download} from "@/utils/download";
 export default {
-  mounted() {
-     console.log("this comp")
-  },
   components: {
     TableColumnFilterDialog,
     KtButton,
-    KtTable
+    PsTable
   },
   data() {
     return {
       activeName: "1",
       planCategoryTabs: [
-        {label: '年度方案',category: '1',load: true},
-        {label: '阶段方案',category: '2',load: false},
-        {label: '综合方案',category: '3',load: false},
-        {label: '具体工作方案',category: '4',load: false}
+        {label: '年度方案',category: '1',load: true,pageResult: {}},
+        {label: '阶段方案',category: '2',load: false,pageResult: {}},
+        {label: '综合方案',category: '3',load: false,pageResult: {}},
+        {label: '具体工作方案',category: '4',load: false,pageResult: {}}
       ],
       columns: [],
 			filterColumns: [],
@@ -86,13 +87,19 @@ export default {
       uploadBtnIcon: "el-icon-upload2"
     };
   },
+  watch: {
+    pageResult() {
+      console.log("pageResult is changed!")
+    }
+  },
   methods: {
     tabClick: function(tab){
       console.log("tab" + tab.label + ";" + tab.name)
       this.key = tab.key
       for(let i = 0; i < this.planCategoryTabs.length; i++){
         if (this.planCategoryTabs[i].label == tab.label){
-          this.planCategoryTabs[i].load = true
+          this.selectedTab = this.planCategoryTabs[i]
+          this.selectedTab.load = true
           break;
         }
       }
@@ -105,7 +112,7 @@ export default {
 			}
       this.pageRequest.columnFilters = {name: {name:'name', value:this.filters.name},category:{name:'category',value:this.activeName}}
 			this.$api.sysPlan.findPage(this.pageRequest).then((res) => {
-				this.pageResult = res.data
+				this.selectedTab.pageResult = res.data
 			},(error) => {this.$message({message: '获取数据失败', type: 'error'})}).then(data!=null?data.callback:'')
     },
     
@@ -139,31 +146,29 @@ export default {
       this.enabledUploadBtn = false;
       this.uploadBtnIcon = "el-icon-loading";
     },
-    // 处理表格列过滤显示
-    displayFilterColumnsDialog: function() {
-      this.$refs.tableColumnFilterDialog.setDialogVisible(true);
-    },
-    // 处理表格列过滤显示
-    handleFilterColumns: function(data) {
-      this.filterColumns = data.filterColumns;
-      this.$refs.tableColumnFilterDialog.setDialogVisible(false);
-    },
-    handleDelete(row) {
-      this.$confirm("确认删除模板文件吗？", "提示", {
+    handleDelete(data) {
+      this.$api.user.batchDelete(data.params).then(data!=null?data.callback:'')
+
+      this.$confirm("确认删除方案文件吗？", "提示", {
         type: "warning"
       }).then(() => {
-        this.$api.template.batchDelete(row).then(
+        this.$api.sysPlan.batchDelete(row).then(
           res => {
-            this.$message({ message: "模板文件删除成功", type: "success" });
+            this.$message({ message: "方案文件删除成功", type: "success" });
             row.filename = "";
             row.relatedUserName = "";
             row.createDate = "";
           },
           error => {
-            this.$message({ message: "模板文件删除失败", type: "error" });
+            this.$message({ message: "方案文件删除失败", type: "error" });
           }
         );
       });
+    },
+    //方案文件下载
+    handleDownload(data){
+        let url = "/sysPlan/download"
+        download(url,data.row)
     },
     handleTemplateDownload() {
       //先向用户确认是不是要下载这种类型的模板,如果是的话，再下载对应的模板
@@ -179,6 +184,9 @@ export default {
       this.$confirm("确认是下载".concat(templateName).concat("模板文件吗？"), "提示", {
         type: "info"
       }).then(() => {
+        //const params = new URLSearchParams()
+        //params.append('category', category)
+        //download("/template/planTemplateDownload",params)
          let headers = {'content-type': 'application/x-www-form-urlencoded' };
          headers.token = Cookies.get("token");
          const instance = axios.create({
@@ -227,6 +235,7 @@ export default {
   },
   mounted() {
     this.initColumns()
+    this.selectedTab = this.planCategoryTabs[0]
   }
 };
 </script>
