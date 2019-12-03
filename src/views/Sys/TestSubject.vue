@@ -49,7 +49,9 @@ export default {
 			},
 			columns: [
 				{prop:"id", label:"ID", minWidth:60},
-				{prop:"labelCn", label:"批次名称", minWidth:100},
+				{prop:"labelCn", label:"考试课目名称", minWidth:100},
+				{prop:"gradeFormat", label:"成绩格式", minWidth:100},
+				{prop:"gradeJudgeFormat", label:"成绩评定方式", minWidth:100},
 				{prop:"createByLabel", label:"创建者", minWidth:220},
 				{prop:"createDate", label:"创建日期", minWidth:180},
 			],
