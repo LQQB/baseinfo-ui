@@ -2,7 +2,7 @@
   <div class="page-container">
       	<!--工具栏-->
 	  <div class="clearfix">
-    <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
+    <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px">
 		 <el-form :inline="true" :model="filters" :size="size">
 			<el-form-item>
 				<kt-button icon="fa fa-search el-icon-download" label="下载方案模板" perms="sys:role:view" type="primary" @click="handleTemplateDownload"/>
@@ -35,7 +35,7 @@
     <el-tabs type="border-card" @tab-click="tabClick" v-model="activeName">
       <el-tab-pane v-for='item in planCategoryTabs' :label='item.label' :key='item.category' :name='item.category'>
 	    <!--表格内容栏-->
-	      <ps-table :height="350" :data="item.pageResult" @findPage="findPage" 
+	      <ps-table :height="tableHeight" :data="item.pageResult" @findPage="findPage" 
                   :columns="filterColumns" :autoLoad='item.load'
                   permsDownload="permsDownload"
                   @handleDownload="handleDownload">
@@ -84,7 +84,8 @@ export default {
       uploadUrl: config.baseUrl + "/sysPlan/planUpload",
       roles: [],
       enabledUploadBtn: true,
-      uploadBtnIcon: "el-icon-upload2"
+      uploadBtnIcon: "el-icon-upload2",
+      tableHeight: window.innerHeight - 60 - 45 - 10 - 70 - 30 - 80 - 39
     };
   },
   watch: {

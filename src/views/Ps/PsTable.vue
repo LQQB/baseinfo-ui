@@ -18,7 +18,7 @@
       </el-table-column>
     </el-table>
     <!--分页栏-->
-    <div class="toolbar" style="padding:10px;">
+    <div class="toolbar" style="padding:10px;height:30px;">
       <el-pagination layout="total, prev, pager, next, jumper" @current-change="refreshPageRequest" 
         :current-page="pageRequest.pageNum" :page-size="pageRequest.pageSize" :total="data.totalSize" style="float:right;">
       </el-pagination>

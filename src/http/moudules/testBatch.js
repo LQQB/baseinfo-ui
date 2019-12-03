@@ -1,13 +1,13 @@
 import axios from '../axios'
 
 /* 
- * 培训批次管理模块
+ * 考试批次管理模块
  */
 
 // 保存
 export const save = (data) => {
     return axios({
-        url: '/trainBatch/save',
+        url: '/testBatch/save',
         method: 'post',
         data
     })
@@ -15,7 +15,7 @@ export const save = (data) => {
 // 删除
 export const batchDelete = (data) => {
     return axios({
-        url: '/trainBatch/delete',
+        url: '/testBatch/delete',
         method: 'post',
         data
     })
@@ -23,24 +23,15 @@ export const batchDelete = (data) => {
 // 分页查询
 export const findPage = (data) => {
     return axios({
-        url: '/trainBatch/findPage',
+        url: '/testBatch/findPage',
         method: 'post',
         data
     })
 }
-
-// 所有数据
-export const findAll = () => {
-    return axios({
-        url: '/trainBatch/findAll',
-        method: 'post'
-    })
-}
-
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
     return axios({
-        url: '/trainBatch/findPermissions',
+        url: '/testBatch/findPermissions',
         method: 'get',
         params
     })

@@ -12,6 +12,7 @@ import * as template from './moudules/template'
 import * as sysPlan from './moudules/sysPlan'
 import * as sysSchedule from './moudules/sysSchedule'
 import * as trainBatch from './moudules/trainBatch'
+import * as testBatch from './moudules/testBatch'
 
 // 默认全部导出
 export default {
@@ -25,5 +26,6 @@ export default {
     template,
     sysPlan,
     sysSchedule,
-    trainBatch
+    trainBatch,
+    testBatch
 }

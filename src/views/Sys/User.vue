@@ -36,7 +36,7 @@
 		</table-column-filter-dialog>
 	</div>
 	<!--表格内容栏-->
-	<kt-table :height="tabHeight" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
+	<kt-table :height="tableHeight" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
 		:data="pageResult" :columns="filterColumns"
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
@@ -230,7 +230,7 @@ export default {
 				{label: '团员', value: '2'},
 				{label: '群众', value: '3'}
 			],
-			tabHeight: 350
+			tableHeight: window.innerHeight - 175 - 30 - 10 - 10 - 10
 		}
 	},
 	methods: {
@@ -380,16 +380,12 @@ export default {
 				this.psOptions = res.data
 				
 			});
-		},
-		initView: function(){
-			this.tabHeight = window.innerHeight - 160
 		}
 	},
 	mounted() {
 		this.findDeptTree()
 		this.initColumns()
 		this.initData()
-		this.initView()
 	}
 }
 </script>
