@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .main-container {
   padding: 0 5px 5px;
   position: absolute;
@@ -115,8 +115,8 @@ export default {
     padding-left: 0px;
     padding-right: 2px;
     z-index: 1020;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     font-size: 14px;
     background: rgb(255, 253, 255);
     border-color: rgba(200, 206, 206, 0.5);
@@ -130,10 +130,10 @@ export default {
     top: 60px;
     right: 0;
     z-index: 1020;
-    height: 40px;
+    height: 30px;
     // padding: 0 10px;
     font-size: 14px;
-    line-height: 40px;
+    line-height: 30px;
     cursor: pointer;
     border-color: rgba(200, 206, 206, 0.5);
     border-left-width: 1px;
@@ -147,7 +147,7 @@ export default {
   }
   .main-content {
     position: absolute;
-    top: 45px;
+    top: 35px;
     left: 5px;
     right: 5px;
     bottom: 5px;
@@ -160,5 +160,17 @@ export default {
 }
 .position-collapse-left {
   left: 65px;
+}
+
+.el-tabs__item {
+  height: 30px  !important;
+  line-height: 30px !important;
+}
+.el-tabs__header {
+  margin-bottom: 0px !important;
+}
+
+.el-popper[x-placement^=bottom] {
+  margin-top: 5px !important;
 }
 </style>

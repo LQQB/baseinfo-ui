@@ -86,7 +86,7 @@ export default {
         initColumns: function(){
 			this.columns = [
 				{prop:"id", label:"ID", minWidth:50,show: false},
-				{prop:"labelCn", label:"批次名称", minWidth:120},
+				{prop:"labelCn", label:"批次名称", minWidth:220},
 				{prop:"createByLabelCn", label:"创建者", minWidth:100},
 				{prop:"createDate", label:"创建日期", minWidth:120},
 			]

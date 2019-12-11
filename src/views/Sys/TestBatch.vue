@@ -8,7 +8,7 @@
      </el-aside>
      <el-container>
  <el-header>	<!--工具栏-->
-	<div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
+	<div class="toolbar" style="float:left;padding-top:5px;padding-left:15px;height:30px;">
 		<el-form :inline="true" :model="filters" :size="size">
 			<el-form-item>
 				<el-input v-model="filters.name" placeholder="名称"></el-input>
@@ -23,8 +23,23 @@
 	</div>
  </el-header>
     <el-main>	<!--表格树内容栏-->
-    <kt-table :height="350" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
+    <kt-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
     </kt-table>
+    <div style="display:inline-block;width:50%;">
+      <fieldset>
+        <legend>已关联考试课目</legend>
+        <kt-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
+        </kt-table>
+      </fieldset>
+    </div>
+    <div  style="display:inline-block;width:50%;">
+    <fieldset>
+        <legend>已选定考试对象</legend>
+        <kt-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
+        </kt-table>
+      </fieldset>
+    </div>
+
         <!-- 新增修改界面 -->
     <el-dialog :title="!dataForm.id ? '新增' : '修改'" width="40%" :visible.sync="dialogVisible" 
     :close-on-click-modal="false" @open="dialogOpened">
@@ -126,7 +141,7 @@ export default {
 				{prop:"id", label:"ID", minWidth:50,show: false},
         {prop:"labelCn", label:"批次名称", minWidth:120},
         {prop:"relatedDeptName", label:"单位", minWidth:100},
-        {prop:"relatedTrainBatchLabelCn", label:"培训批次", minWidth:100},
+        {prop:"relatedTrainBatchLabelCn", label:"培训批次", minWidth:180},
         {prop:"createByLabelCn", label:"创建者", minWidth:100},
 				{prop:"createDate", label:"创建日期", minWidth:120},
 			]
@@ -251,5 +266,16 @@ export default {
 </script>
 
 <style scoped>
+ .el-header {
+   height: 35px !important;
+ }
+
+ .el-main {
+   padding-top: 10px !important;
+ }
+
+ .el-table--mini td, .el-table--mini th {
+   padding: 3px 0 !important;
+ }
 
 </style>
