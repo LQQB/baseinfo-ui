@@ -5,7 +5,7 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
 		 <el-form :inline="true" :model="filters" :size="size">
 			<el-form-item>
-				<kt-button icon="fa fa-search el-icon-download" label="下载计划模板" perms="sys:role:view" type="primary" @click="handleTemplateDownload"/>
+				<kt-button icon="fa fa-search el-icon-download" :label="downLoadBtnLabel" perms="sys:role:view" type="primary" @click="handleTemplateDownload"/>
 			</el-form-item>
 			<el-form-item>
               <el-upload
@@ -25,7 +25,7 @@
                   :icon="uploadBtnIcon"
                   size="mini"
                   type="primary"
-                >上传计划</el-button>
+                >{{upLoadBtnLabel}}</el-button>
               </el-upload>
 				
 			</el-form-item>
@@ -61,6 +61,8 @@ export default {
   data() {
     return {
       activeName: "1",
+      downLoadBtnLabel: "下载年度计划模板",
+      upLoadBtnLabel: "上传年度计划",
       scheduleCategoryTabs: [
         {label: '年度计划',category: '1',load: true,pageResult: {}},
         {label: '阶段计划',category: '2',load: false,pageResult: {}},
@@ -102,6 +104,8 @@ export default {
       for(let i = 0; i < this.scheduleCategoryTabs.length; i++){
         if (this.scheduleCategoryTabs[i].label == tab.label){
           this.selectedTab = this.scheduleCategoryTabs[i]
+          downLoadBtnLabel = "下载".concat(tab.label).concat("模板")
+          upLoadBtnLabel = "上传".concat(tab.label)
           this.selectedTab.load = true
           break;
         }
