@@ -10,10 +10,11 @@
         :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
         :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter">
       </el-table-column>
-      <el-table-column :label="$t('action.operation')" width="185" fixed="right" v-if="showOperation" header-align="center" align="center">
+      <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" :label="$t('action.edit')" :perms="permsEdit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" :perms="permsDelete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-edit" :label="$t('action.edit')" perms="sys:testbatch:edit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-edit" label="关联" perms="sys:testbatch:relate" :size="size" @click="handleRelate(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys:testbatch:delete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -139,7 +140,11 @@ export default {
     // 编辑
 		handleEdit: function (index, row) {
       this.$emit('handleEdit', {index:index, row:row})
-		},
+    },
+    //关联考试课目
+    handleRelate: function(index,row){
+      this.$emit('handleRelate', {index:index, row:row})
+    },
     // 删除
 		handleDelete: function (index, row) {
 			this.delete(row.id)
@@ -196,4 +201,8 @@ clear: both;
    padding: 3px 0 !important;
  }
 
+  .el-table .cell {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
 </style>

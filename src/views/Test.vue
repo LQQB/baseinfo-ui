@@ -1,8 +1,10 @@
 <template>
   <div  >
     
-    <div style="background:black;float:left;height:100px;" class="clearfix"> this is a div1</div>
-    
+    <div style="background:black;"  class="clearfix"> 
+       <button  style="float:left" >this is a button</button>
+       <div style="float:right"><span>this is a div</span></div>
+    </div>
     <div style="background:yellow;"> this is a span2</div>
     </div>
 

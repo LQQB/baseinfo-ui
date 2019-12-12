@@ -3,12 +3,12 @@
 
    <el-container>
      <!-- 左边是一个部门树 -->
-     <el-aside width="200px">
+     <el-aside width="180px">
         <el-tree :data="tableTreeDdata" :props="popupTreeProps" @node-click="handleNodeClick">></el-tree>
      </el-aside>
      <el-container>
  <el-header>	<!--工具栏-->
-	<div class="toolbar" style="float:left;padding-top:5px;padding-left:15px;height:30px;">
+	<div class="toolbar" style="float:left;padding-top:5px;padding-left:0px;height:30px;">
 		<el-form :inline="true" :model="filters" :size="size">
 			<el-form-item>
 				<el-input v-model="filters.name" placeholder="名称"></el-input>
@@ -23,21 +23,59 @@
 	</div>
  </el-header>
     <el-main>	<!--表格树内容栏-->
-    <kt-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
-    </kt-table>
-    <div style="display:inline-block;width:50%;">
-      <fieldset>
+    <test-batch-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage" 
+                      @handleCurrentChange="handleTestBatchSelected"
+                      @handleRelate="handleRelate"> 
+    </test-batch-table>
+    <div>
+     <el-row>
+        <el-col :span="12">
+      <fieldset style="border-Color: #eef1f6;border-width: 0.5px; text-align: left;  border-radius: 5px; font-size:12px; ">
         <legend>已关联考试课目</legend>
-        <kt-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
-        </kt-table>
+          <el-table ref="testSubjectTable" :data="selectedTestSubjectData" :row-style="{height:'20px'}" 
+                    v-loading="getSelectedTestSubjectloading"  :element-loading-text="$t('action.loading')"
+                     style="width:100%;" :height="testSubjectHeight" :max-height="testSubjectHeight" :highlightCurrentRow="true" size="mini"
+                     :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                     @current-change="handleTestSubjectSelected">
+            <el-table-column header-align="center" align="center" label="关联id" prop="rtbsId" v-if="false">
+            </el-table-column>  
+            <el-table-column header-align="center" align="center" label="课目id" prop="id" v-if="false">
+            </el-table-column>       
+            <el-table-column header-align="center" align="center" label="课目名称" prop="labelCn">
+            </el-table-column>
+            <el-table-column header-align="center" align="center" label="格式" prop="gradeFormatLabelCn">
+            </el-table-column>
+            <el-table-column header-align="center" align="center" label="评定方式" prop="gradeJudgeFormatLabelCn">
+            </el-table-column>
+      <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-edit" label="设定" perms="sys.testbatch.testsubject.relate" :size="size" @click="handleEdit(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys.testbatch.unrelate" :size="size" type="danger" @click="handleDeleteRelatedTestSubject(scope.$index, scope.row)" />
+        </template>
+      </el-table-column>
+    </el-table>
+
       </fieldset>
-    </div>
-    <div  style="display:inline-block;width:50%;">
-    <fieldset>
+        </el-col>
+         <el-col :span="12">
+    <fieldset style="border-Color: #eef1f6;border-width: 0.5px; text-align: left;  border-radius: 5px; font-size:12px; ">
         <legend>已选定考试对象</legend>
-        <kt-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage">
-        </kt-table>
+           <el-table :data="selectedTestUserData" :row-style="{height:'20px'}" v-loading="getSelectedUserloading" :element-loading-text="$t('action.loading')"
+                     style="width:100%;" :header-cell-style="{background:'#eef1f6',color:'#606266'}" size="mini" 
+                     :height="testSubjectHeight" :max-height="testSubjectHeight">
+            <el-table-column header-align="center" align="center" label="账号名" prop="name">
+            </el-table-column>
+            <el-table-column header-align="center" align="center" label="所属单位" prop="deptName">
+            </el-table-column>
+      <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys.testbatch.testsubject.testuser.unrelate" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
+        </template>
+      </el-table-column>
+          </el-table> 
       </fieldset>
+        </el-col>
+     </el-row>   
     </div>
 
         <!-- 新增修改界面 -->
@@ -78,7 +116,7 @@
 
 <script>
 import KtButton from "@/views/Core/KtButton"
-import KtTable from "@/views/Core/KtTable"
+import TestBatchTable from "@/views/Core/table/TestBatchTable"
 import TableTreeColumn from '@/views/Core/TableTreeColumn'
 import PopupTreeInput from "@/components/PopupTreeInput"
 import FaIconTooltip from "@/components/FaIconTooltip"
@@ -87,15 +125,16 @@ export default {
 	components:{
     PopupTreeInput,
     KtButton,
-    KtTable,
+    TestBatchTable,
     TableTreeColumn,
     FaIconTooltip
 	},
 	data() {
 		return {
-      size: 'small',
+      size: 'mini',
       filterColumns: [],
-      loading: false,
+      getSelectedTestSubjectloading: false,
+      getSelectedUserloading: false,
       pageResult: {},
       pageRequest: { pageNum: 1, pageSize: 10 },
 			filters: {
@@ -123,7 +162,10 @@ export default {
       popupTreeProps: {
 				label: 'name',
 				children: 'children'
-			}
+      },
+      selectedTestSubjectData: [],
+      selectedTestUserData: [],
+      testSubjectHeight:  0
 		}
 	},
 	methods: {
@@ -255,12 +297,76 @@ export default {
 		// 时间格式化
     dateFormat: function (row, column, cellValue, index){
       return format(row[column.property])
-    }
-    
+    },
+    handleRelate: function(index,row){
+
+    },
+    handleDeleteRelatedTestSubject: function(index,row){
+      let rtbsId = row.rtbsId
+      let params = {'rtbsId': rtbsId}
+      this.getSelectedTestSubjectloading = true
+      this.$api.testSubject.deleteRelatedTestSubject(params).then((res) => {
+        this.getSelectedTestSubjectloading = false
+        //this.selectedTestSubjectData = res.data
+        this.$message({ message: '操作成功', type: 'success' })
+			},(error) => {
+        this.getSelectedTestSubjectloading = false
+        this.$message({message: '删除考试课目关联操作失败, ' + error, type: 'error'})
+      })
+
+    },
+    handleTestBatchSelected: function(currentRow,oldCurrentRow){
+      let testBatchId = currentRow.val.id
+      let params = {'testBatchId': testBatchId}
+      this.getSelectedTestSubjectloading = true
+      this.$api.testSubject.findAllByTestBatchId(params).then((res) => {
+        this.getSelectedTestSubjectloading = false
+				this.selectedTestSubjectData = res.data
+			},(error) => {
+        this.getSelectedTestSubjectloading = false
+        this.$message({message: '获取已关联考试课目操作失败, ' + error, type: 'error'})
+      })
+    },
+    handleTestSubjectSelected: function(currentRow,oldCurrentRow){
+      let params = {'rtbsId': currentRow.rtbsId}
+      this.getSelectedUserloading = true
+      this.$api.user.findAllByRTBSId(params).then((res) => {
+        this.getSelectedUserloading = false
+				this.selectedTestUserData = res.data
+			},(error) => {
+        this.getSelectedUserloading = false
+        this.$message({message: '获取考试对象操作失败, ' + error, type: 'error'})
+      })
+    },
+
+    getElementToPageTop: function (el) {
+      if(el.parentElement) {
+    return this.getElementToPageTop(el.parentElement) + el.offsetTop
+  }
+  return el.offsetTop
+},
+offsetDis: function(obj) {
+		var l = 0, t = 0;
+		while(obj) {
+			l = l + obj.offsetLeft + obj.clientLeft;
+			t = t + obj.offsetTop + obj.clientTop;
+			obj = obj.offsetParent;
+		}
+		return {left: l, top: t};
+	}
+
 	},
 	mounted() {
     this.findTreeData()
     this.initColumns()
+    this.$nextTick(function () {
+        this.testSubjectHeight = window.innerHeight - this.offsetDis(this.$refs.testSubjectTable.$el).top - 28;
+            // 监听窗口大小变化
+            let self = this;
+            window.onresize = function() {
+                this.testSubjectHeight = window.innerHeight - this.offsetDis(this.$refs.testSubjectTable.$el).top - 28;
+            }
+        })
 	}
 }
 </script>

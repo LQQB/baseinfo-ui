@@ -13,8 +13,7 @@ import Generator from '@/views/Generator/Generator'
 import api from '@/http/api'
 import store from '@/store'
 import { getIFramePath, getIFrameUrl } from '@/utils/iframe'
-import IFrame from '@/views/IFrame/IFrame'
-import IFrameContent from '@/views/IFrameContent'
+import TrainResource from '@/views/TrainResource/TrainResource'
 Vue.use(Router)
 
 const router = new Router({
@@ -77,6 +76,22 @@ const router = new Router({
           path: '', 
           name: '系统介绍', 
           component: Intro,
+          meta: {
+            icon: 'fa fa-home fa-lg',
+            index: 0
+          }
+        }
+      ]
+    },
+    {
+      path: '/tr',
+      name: '教学资源',
+      component: Home,
+      children: [
+        { 
+          path: '', 
+          name: '教学资源', 
+          component: TrainResource,
           meta: {
             icon: 'fa fa-home fa-lg',
             index: 0
@@ -167,6 +182,9 @@ function addDynamicMenuAndRoutes(userName, to, from) {
     api.user.findPermissions({'name':userName}).then(res => {
       // 保存用户权限标识集合
       res.data.push('permsDownload')
+      res.data.push('sys:testbatch:relate')
+      res.data.push('sys.testbatch.unrelate')
+      res.data.push("trainResource.upload")
       store.commit('setPerms', res.data)
     })
   })

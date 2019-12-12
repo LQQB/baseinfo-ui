@@ -36,3 +36,13 @@ export const findPermissions = (params) => {
         params
     })
 }
+
+export const findAllByRTBSId = (params) => {
+        return axios({
+            url: '/user/findAllByRTBSId',
+            method: 'get',
+            params
+        })
+    
+    
+}

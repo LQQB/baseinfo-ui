@@ -3,8 +3,10 @@
     <div>
       <!-- 头部区域 -->
       <head-bar></head-bar>
-      <nav-bar></nav-bar>
-      <main-content></main-content>
+
+      <nav-bar v-show="this.$route.path !='/tr'"></nav-bar>
+      <main-content v-show="this.$route.path != '/tr'"></main-content>
+      <single-main-content  v-show="this.$route.path == '/tr'"></single-main-content>
       <!-- <div class="iframe-container">
          <iframe width="100%" height="100%" frameborder="0" src="/planSchedule">
       </iframe>
@@ -20,12 +22,17 @@
 import HeadBar from "./HeadBar/HeadBar"
 import NavBar from "./NavBar/NavBar"
 import MainContent from "./MainContent/MainContent"
+import SingleMainContent from "./SingleMainContent/SingleMainContent"
 
 export default {
   components:{
         HeadBar,
         NavBar,
-        MainContent
+        MainContent,
+        SingleMainContent
+  },
+  mounted() {
+    console.log(this.$route.path)
   }
 };
 </script>

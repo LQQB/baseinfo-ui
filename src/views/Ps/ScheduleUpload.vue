@@ -104,8 +104,8 @@ export default {
       for(let i = 0; i < this.scheduleCategoryTabs.length; i++){
         if (this.scheduleCategoryTabs[i].label == tab.label){
           this.selectedTab = this.scheduleCategoryTabs[i]
-          downLoadBtnLabel = "下载".concat(tab.label).concat("模板")
-          upLoadBtnLabel = "上传".concat(tab.label)
+          this.downLoadBtnLabel = "下载".concat(tab.label).concat("模板")
+          this.upLoadBtnLabel = "上传".concat(tab.label)
           this.selectedTab.load = true
           break;
         }

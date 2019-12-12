@@ -14,6 +14,7 @@ import * as sysSchedule from './moudules/sysSchedule'
 import * as trainBatch from './moudules/trainBatch'
 import * as testBatch from './moudules/testBatch'
 import * as testSubject from './moudules/testSubject'
+import * as trainResource from './moudules/trainResource'
 
 // 默认全部导出
 export default {
@@ -29,5 +30,6 @@ export default {
     sysSchedule,
     trainBatch,
     testBatch,
-    testSubject
+    testSubject,
+    trainResource
 }

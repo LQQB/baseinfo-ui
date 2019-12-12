@@ -59,5 +59,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .el-button--mini {
+    padding: 7px 5px !important;
+  }
 </style>

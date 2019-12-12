@@ -2,13 +2,13 @@
   <div>
     <!--表格栏-->
     <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange" 
-          @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="$t('action.loading')" :border="border" :stripe="stripe"
-          :show-overflow-tooltip="showOverflowTooltip" :max-height="maxHeight" :height="height" :size="size" :align="align" style="width:100%;" >
+          @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="$t('action.loading')" :border="true" :stripe="stripe"
+          :show-overflow-tooltip="showOverflowTooltip" :max-height="maxHeight" :height="height" :size="size" :align="align" style="width:100%;" 
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}">
       <!-- <el-table-column type="selection" width="40" v-if="showBatchDelete & showOperation"></el-table-column> -->
       <el-table-column v-for="column in columnArray" header-align="center" align="center"
         :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
-        :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter"
-        :sortable="column.sortable==null?true:column.sortable">
+        :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter">
       </el-table-column>
       <el-table-column :label="$t('action.operation')" width="185" fixed="right" v-if="showOperation" header-align="center" align="center">
         <template slot-scope="scope">
@@ -18,7 +18,39 @@
       </el-table-column>
     </el-table>
     <!--分页栏-->
-    <div class="toolbar" style="padding:10px;height:30px;">
+    <div style="padding:5px;height:30px;background:#eef1f6">
+      <kt-upload-button 
+         :icon="uploadBtnIcon" 
+         type="primary" 
+         :perms="permsUpload" 
+         :uploadParams="uploadParams"
+         size="small"  
+         style="float:left;" 
+         @before-upload="beforeUpload"
+         @on-success="onSuccess"
+         @on-error="onError"
+         :uploadUrl="uploadUrl"/>
+      <!-- <el-upload
+                name="file"
+                class="upload-demo"
+                style="display: inline"
+                :headers="headers"
+                :data="{category:this.activeName}"
+                :action="uploadUrl"
+                :show-file-list="false"
+                :before-upload="beforeUpload"
+                :on-success="onSuccess"
+                :on-error="onError"
+              >
+                <el-button
+                  :disabled="!enabledUploadBtn"
+                  :icon="uploadBtnIcon"
+                  size="mini"
+                  type="primary"
+                >上传</el-button>
+              </el-upload> -->
+      
+      
       <el-pagination layout="total, prev, pager, next, jumper" @current-change="refreshPageRequest" 
         :current-page="pageRequest.pageNum" :page-size="pageRequest.pageSize" :total="data.totalSize" style="float:right;">
       </el-pagination>
@@ -27,13 +59,20 @@
 </template>
 
 <script>
+import KtUploadButton from "@/views/Core/KtUploadButton"
 import KtButton from "@/views/Core/KtButton"
 export default {
   name: 'PsTable',
   components:{
-			KtButton
+      KtButton,
+      KtUploadButton
 	},
   props: {
+    uploadParams:{},
+    uploadUrl: {
+      type: String,
+      default: null
+    },
     autoLoad: {
       type: Boolean, //是否自动加载数据
       default: true
@@ -43,6 +82,7 @@ export default {
     data: Object, // 表格分页数据
     permsDownload: String,  // 编辑权限标识
     permsDelete: String,  // 删除权限标识
+    permsUpload: String,
     size: { // 尺寸样式
       type: String,
       default: 'mini'
@@ -86,7 +126,6 @@ export default {
   },
   watch:{
     autoLoad: function(){
-      console.log("property is changed!")
       if (this.autoLoad){
         this.refreshPageRequest(1)
       }
@@ -109,7 +148,8 @@ export default {
         pageSize: 10
       },
       loading: false,  // 加载标识
-      selections: []  // 列表选中列
+      selections: [],  // 列表选中列
+      uploadBtnIcon: "el-icon-upload2",
     }
   },
   methods: {
@@ -171,7 +211,16 @@ export default {
         this.$emit('handleDelete', {params:params, callback:callback})
 			}).catch(() => {
 			})
-		}
+    },
+    beforeUpload: function(file){
+      this.$emit('before-upload', {})
+    },
+    onSuccess: function(){
+      this.$emit('on-success', {})
+    },
+    onError: function(){
+      this.$emit('on-error', {})
+    }
   },
   mounted() {
     //可以配置装载组件的时候不要加载数据
