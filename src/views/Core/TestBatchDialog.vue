@@ -81,7 +81,7 @@
       </el-table-column>
           </el-table> 
     <div style="padding:5px;height:30px;background:#eef1f6">
-      <kt-button type="primary" label="关联单位" perms="sys:testbatch:add"></kt-button>
+      <kt-button type="primary" label="关联单位" perms="sys:testbatch:add" @click="handleRelateTestDeptUser"></kt-button>
     </div>
       </fieldset>
   </el-col>
@@ -105,9 +105,6 @@
         </template>
       </el-table-column>
           </el-table> 
-      <div style="padding:5px;height:30px;background:#eef1f6">
-      <kt-button type="primary" label="关联考试对象" perms="sys:testbatch:add"></kt-button>
-      </div>    
       </fieldset>
     </el-col>
      </el-row>   
@@ -121,6 +118,9 @@
                                    @selectionChange="relatedTestSubjectSelections"
                                    @handleRelatedTestSubject="handleRelatedTestSubject"> 
       </related-test-subject-dialog> 
+      <related-test-dept-user-dialog ref="relatedTestDeptUserDialog" 
+                                   > 
+      </related-test-dept-user-dialog> 
 
     </el-dialog>
 </template>
@@ -128,11 +128,13 @@
 <script>
 import KtButton from "@/views/Core/KtButton"
 import RelatedTestSubjectDialog from "@/views/Core/RelatedTestSubjectDialog"
+import RelatedTestDeptUserDialog from "@/views/Core/RelatedTestDeptUserDialog"
 export default {
   name: 'TestBatchDialog',
   components:{
       KtButton,
-      RelatedTestSubjectDialog
+      RelatedTestSubjectDialog,
+      RelatedTestDeptUserDialog,
 	},
   props: {
     outterSelectedTestSubjectData:{
@@ -240,6 +242,9 @@ export default {
     }
   },
   methods: {
+    handleRelateTestDeptUser: function(){
+      this.$refs.relatedTestDeptUserDialog.setDialogVisible(true)
+    },
     handleRelateTestSubject: function(){
       this.$refs.relatedTestSubjectDialog.setDialogVisible(true)
     },
