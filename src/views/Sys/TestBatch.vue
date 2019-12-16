@@ -2,11 +2,7 @@
   <div class="page-container">
 
    <el-container>
-     <!-- 左边是一个部门树 -->
-     <el-aside width="180px">
-        <el-tree :data="tableTreeDdata" :props="popupTreeProps" @node-click="handleNodeClick">></el-tree>
-     </el-aside>
-     <el-container>
+   
  <el-header>	<!--工具栏-->
 	<div class="toolbar" style="float:left;padding-top:5px;padding-left:0px;height:30px;">
 		<el-form :inline="true" :model="filters" :size="size">
@@ -17,7 +13,7 @@
 				<kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:dept:view" type="primary" @click="findTreeData(null)"/>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:dept:add" type="primary" @click="handleAdd"/>
+				<kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:testbatch:add" type="primary" @click="handleAdd"/>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -25,39 +21,61 @@
     <el-main>	<!--表格树内容栏-->
     <test-batch-table :height="200" :data="pageResult" :columns="filterColumns"	@findPage="findPage" 
                       @handleCurrentChange="handleTestBatchSelected"
-                      @handleRelate="handleRelate"> 
+                      @handleRelate="handleRelate"
+                      @handleEdit="handleEdit"> 
     </test-batch-table>
     <div>
      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
       <fieldset style="border-Color: #eef1f6;border-width: 0.5px; text-align: left;  border-radius: 5px; font-size:12px; ">
         <legend>已关联考试课目</legend>
           <el-table ref="testSubjectTable" :data="selectedTestSubjectData" :row-style="{height:'20px'}" 
                     v-loading="getSelectedTestSubjectloading"  :element-loading-text="$t('action.loading')"
                      style="width:100%;" :height="testSubjectHeight" :max-height="testSubjectHeight" :highlightCurrentRow="true" size="mini"
-                     :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-                     @current-change="handleTestSubjectSelected">
+                     :header-cell-style="{background:'#eef1f6',color:'#606266'}">
             <el-table-column header-align="center" align="center" label="关联id" prop="rtbsId" v-if="false">
             </el-table-column>  
             <el-table-column header-align="center" align="center" label="课目id" prop="id" v-if="false">
-            </el-table-column>       
+            </el-table-column>
+            <el-table-column header-align="center" align="center" label="考试批次id" prop="rtbId" v-if="false">
+            </el-table-column>              
             <el-table-column header-align="center" align="center" label="课目名称" prop="labelCn">
             </el-table-column>
             <el-table-column header-align="center" align="center" label="格式" prop="gradeFormatLabelCn">
             </el-table-column>
             <el-table-column header-align="center" align="center" label="评定方式" prop="gradeJudgeFormatLabelCn">
             </el-table-column>
-      <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
+      <el-table-column :label="$t('action.operation')" width="85" fixed="right" header-align="center" align="center">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" label="设定" perms="sys.testbatch.testsubject.relate" :size="size" @click="handleEdit(scope.$index, scope.row)" />
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys.testbatch.unrelate" :size="size" type="danger" @click="handleDeleteRelatedTestSubject(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" label="移除" perms="sys.testbatch.testsubject.unrelate" :size="size" type="danger" @click="handleDeleteRelatedTestSubject(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
 
       </fieldset>
         </el-col>
-         <el-col :span="12">
+
+ <el-col :span="8">
+    <fieldset style="border-Color: #eef1f6;border-width: 0.5px; text-align: left;  border-radius: 5px; font-size:12px; margin-left:2px; margint-right:2px; ">
+        <legend>已选定单位</legend>
+           <el-table :data="selectedDeptData" :row-style="{height:'20px'}" v-loading="getSelectedUserloading" :element-loading-text="$t('action.loading')"
+                     style="width:100%;" :header-cell-style="{background:'#eef1f6',color:'#606266'}" size="mini" 
+                     :height="testSubjectHeight" :max-height="testSubjectHeight">
+            <el-table-column header-align="center" align="center" label="单位名称" prop="name">
+            </el-table-column>
+            <el-table-column header-align="center" align="center" label="关联id" prop="rtbsId" v-if="false">
+            </el-table-column>
+      <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
+        <template slot-scope="scope">
+          <kt-button icon="fa fa-trash" label="移除" perms="sys.testbatch.dept.unrelate" :size="size" type="danger" @click="handleTestBatchUnrelateDept(scope.$index, scope.row)" />
+        </template>
+      </el-table-column>
+          </el-table> 
+      </fieldset>
+  </el-col>
+
+
+  <el-col :span="8">
     <fieldset style="border-Color: #eef1f6;border-width: 0.5px; text-align: left;  border-radius: 5px; font-size:12px; ">
         <legend>已选定考试对象</legend>
            <el-table :data="selectedTestUserData" :row-style="{height:'20px'}" v-loading="getSelectedUserloading" :element-loading-text="$t('action.loading')"
@@ -67,49 +85,23 @@
             </el-table-column>
             <el-table-column header-align="center" align="center" label="所属单位" prop="deptName">
             </el-table-column>
+            <el-table-column header-align="center" align="center" label="关联ID" prop="rtbuid" v-if="false">
+            </el-table-column>
       <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys.testbatch.testsubject.testuser.unrelate" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" label="移除" perms="sys.testbatch.user.unrelate" :size="size" type="danger" @click="handleTestBatchUnrelateUser(scope.$index, scope.row)" />
         </template>
       </el-table-column>
           </el-table> 
       </fieldset>
-        </el-col>
+    </el-col>
      </el-row>   
     </div>
-
-        <!-- 新增修改界面 -->
-    <el-dialog :title="!dataForm.id ? '新增' : '修改'" width="40%" :visible.sync="dialogVisible" 
-    :close-on-click-modal="false" @open="dialogOpened">
-      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="submitForm()" 
-        label-width="120px" :size="size" style="text-align:left;">
-         <el-form-item label="ID" prop="id" v-if="false">
-				   <el-input v-model="dataForm.id" :disabled="true" auto-complete="off"></el-input>
-			   </el-form-item>
-			   <el-form-item label="考试批次名称" prop="labeCn">
-				   <el-input v-model="dataForm.labelCn" auto-complete="off"></el-input>
-			   </el-form-item>      
-          <el-form-item label="所属培训批次" prop="relatedTrainBatchId">
-				   <el-select v-model="dataForm.relatedTrainBatchId" placeholder="请选择">
-							<el-option
-                              v-for="item in trainBatchItemS"
-                              :key="item.id"
-                              :label="item.labelCn"
-                              :value="item.id">
-                            </el-option>
-						</el-select>
-			   </el-form-item>  
-         <el-form-item label="所属单位" prop="relatedDeptId">
-				   <el-input v-model="dataForm.relatedDeptId" auto-complete="off"></el-input>
-			   </el-form-item> 
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button :size="size"  @click="dialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size"  type="primary" @click="submitForm()">{{$t('action.comfirm')}}</el-button>
-      </span>
-    </el-dialog>
+    		<!--对话框显示列界面-->
+		<test-batch-dialog ref="testBatchDialog"> </test-batch-dialog> 
+    
     </el-main>
-  </el-container>
+ 
 </el-container>
   </div>
 </template>
@@ -121,13 +113,15 @@ import TableTreeColumn from '@/views/Core/TableTreeColumn'
 import PopupTreeInput from "@/components/PopupTreeInput"
 import FaIconTooltip from "@/components/FaIconTooltip"
 import { format } from "@/utils/datetime"
+import TestBatchDialog from "@/views/Core/TestBatchDialog"
 export default {
 	components:{
     PopupTreeInput,
     KtButton,
     TestBatchTable,
     TableTreeColumn,
-    FaIconTooltip
+    FaIconTooltip,
+    TestBatchDialog
 	},
 	data() {
 		return {
@@ -135,6 +129,7 @@ export default {
       filterColumns: [],
       getSelectedTestSubjectloading: false,
       getSelectedUserloading: false,
+      getSelectedDeptloading: false,
       pageResult: {},
       pageRequest: { pageNum: 1, pageSize: 10 },
 			filters: {
@@ -148,16 +143,7 @@ export default {
         relatedDeptId: 0,
         relatedTrainBatchId: 0
       },
-      dataRule: {
-        name: [
-          { required: true, message: '单位名称不能为空', trigger: 'blur' }
-        ],
-        parentName: [
-          { required: true, message: '上级单位不能为空', trigger: 'change' }
-        ]
-      },
       selectedDeptId: -1,
-      trainBatchItemS: [],
       popupTreeData: [],
       popupTreeProps: {
 				label: 'name',
@@ -165,6 +151,7 @@ export default {
       },
       selectedTestSubjectData: [],
       selectedTestUserData: [],
+      selectedDeptData: [],
       testSubjectHeight:  0
 		}
 	},
@@ -182,7 +169,6 @@ export default {
 			this.columns = [
 				{prop:"id", label:"ID", minWidth:50,show: false},
         {prop:"labelCn", label:"批次名称", minWidth:120},
-        {prop:"relatedDeptName", label:"单位", minWidth:100},
         {prop:"relatedTrainBatchLabelCn", label:"培训批次", minWidth:180},
         {prop:"createByLabelCn", label:"创建者", minWidth:100},
 				{prop:"createDate", label:"创建日期", minWidth:120},
@@ -201,11 +187,7 @@ export default {
 			}).then(data!=null?data.callback:'')
     },
 
-    dialogOpened: function(){
-        this.$api.trainBatch.findAll().then((res) => {
-				this.trainBatchItemS = res.data
-			});
-		},
+
   
     
 		// 获取上级单位树
@@ -227,19 +209,32 @@ export default {
     },
 		// 显示新增界面
 		handleAdd: function () {
-			this.dialogVisible = true
-			this.dataForm = {
+      this.$refs.testBatchDialog.setDialogVisible(true)
+      this.$refs.testBatchDialog.dataForm = {
         id: 0,
-        name: '',
-        parentId: 0,
-        parentName: '',
-        orderNum: 0
+        labelCn: '',
+        relatedTrainBatchId: ''
       }
+      this.$refs.testBatchDialog.selectedTestSubjectData = []
+      this.$refs.testBatchDialog.selectedDeptData = []
+      this.$refs.testBatchDialog.selectedTestUserData = []
+			// this.dialogVisible = true
+			// this.dataForm = {
+      //   id: 0,
+      //   name: '',
+      //   parentId: 0,
+      //   parentName: '',
+      //   orderNum: 0
+      // }
 		},
 		// 显示编辑界面
 		handleEdit: function (row) {
-      this.dialogVisible = true
-      Object.assign(this.dataForm, row);
+      this.$refs.testBatchDialog.setDialogVisible(true)
+      Object.assign(this.$refs.testBatchDialog.dataForm, row.row)
+      Object.assign(this.$refs.testBatchDialog.outterSelectedTestSubjectData, this.selectedTestSubjectData)
+      Object.assign(this.$refs.testBatchDialog.outterSelectedDeptData, this.selectedDeptData)
+      Object.assign(this.$refs.testBatchDialog.outterSelectedTestUserData, this.selectedTestUserData)
+
 		},
     // 删除
     handleDelete (row) {
@@ -302,21 +297,32 @@ export default {
 
     },
     handleDeleteRelatedTestSubject: function(index,row){
+      this.$confirm('确认移除被关联的考试课目吗？', '提示', {
+				type: 'warning'
+      }).then(() =>{
       let rtbsId = row.rtbsId
+      let rtbId = row.rtbId
       let params = {'rtbsId': rtbsId}
       this.getSelectedTestSubjectloading = true
       this.$api.testSubject.deleteRelatedTestSubject(params).then((res) => {
         this.getSelectedTestSubjectloading = false
-        //this.selectedTestSubjectData = res.data
+        this.getTestSubjectByTestBatch(rtbId)
         this.$message({ message: '操作成功', type: 'success' })
 			},(error) => {
         this.getSelectedTestSubjectloading = false
-        this.$message({message: '删除考试课目关联操作失败, ' + error, type: 'error'})
+        this.$message({message: '移除考试课目关联操作失败, ' + error, type: 'error'})
+      })
       })
 
     },
     handleTestBatchSelected: function(currentRow,oldCurrentRow){
       let testBatchId = currentRow.val.id
+      this.getTestSubjectByTestBatch(testBatchId)
+      this.getDeptByTestBatch(testBatchId)
+      this.getUserByTestBatch(testBatchId)
+
+    },
+    getTestSubjectByTestBatch: function(testBatchId){
       let params = {'testBatchId': testBatchId}
       this.getSelectedTestSubjectloading = true
       this.$api.testSubject.findAllByTestBatchId(params).then((res) => {
@@ -326,11 +332,24 @@ export default {
         this.getSelectedTestSubjectloading = false
         this.$message({message: '获取已关联考试课目操作失败, ' + error, type: 'error'})
       })
+
     },
-    handleTestSubjectSelected: function(currentRow,oldCurrentRow){
-      let params = {'rtbsId': currentRow.rtbsId}
+    getDeptByTestBatch: function(testBatchId){
+      let params = {'testBatchId': testBatchId}
+      this.getSelectedDeptloading = true
+      this.$api.dept.findByTestBatch(params).then((res) => {
+        this.getSelectedDeptloading = false
+				this.selectedDeptData = res.data
+			},(error) => {
+        this.getSelectedDeptloading = false
+        this.$message({message: '获取已选定单位操作失败, ' + error, type: 'error'})
+      })
+
+    },
+    getUserByTestBatch: function(testBatchId){
+      let params = {'testBatchId': testBatchId}
       this.getSelectedUserloading = true
-      this.$api.user.findAllByRTBSId(params).then((res) => {
+      this.$api.user.findByTestBatch(params).then((res) => {
         this.getSelectedUserloading = false
 				this.selectedTestUserData = res.data
 			},(error) => {
@@ -339,12 +358,7 @@ export default {
       })
     },
 
-    getElementToPageTop: function (el) {
-      if(el.parentElement) {
-    return this.getElementToPageTop(el.parentElement) + el.offsetTop
-  }
-  return el.offsetTop
-},
+
 offsetDis: function(obj) {
 		var l = 0, t = 0;
 		while(obj) {
@@ -384,4 +398,16 @@ offsetDis: function(obj) {
    padding: 3px 0 !important;
  }
 
+.dialogCustomClass {
+  width:80%;
+}
+
+
+
+</style>
+
+<style>
+.el-dialog__header {
+  background-color: !important;
+}
 </style>

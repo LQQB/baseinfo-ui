@@ -27,3 +27,12 @@ export const findDeptTree = () => {
         method: 'get'
     })
 }
+
+export const findByTestBatch = (params) => {
+    return axios({
+        url: '/dept/findByTestBatch',
+        method: 'get',
+        params
+    })
+}
+

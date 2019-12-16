@@ -37,9 +37,9 @@ export const findPermissions = (params) => {
     })
 }
 
-export const findAllByRTBSId = (params) => {
+export const findByTestBatch = (params) => {
         return axios({
-            url: '/user/findAllByRTBSId',
+            url: '/user/findByTestBatch',
             method: 'get',
             params
         })
