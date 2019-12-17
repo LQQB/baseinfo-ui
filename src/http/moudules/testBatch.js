@@ -36,3 +36,21 @@ export const findPermissions = (params) => {
         params
     })
 }
+
+// 关联考试批次与考试课目
+export const relatedTestSubject = (data) => {
+    return axios({
+        url: '/testBatch/relatedTestSubject',
+        method: 'post',
+        data
+    })
+}
+
+// 解除关联考试批次与考试课目
+export const unRelatedTestSubject = (params) => {
+    return axios({
+        url: '/testBatch/unRelatedTestSubject',
+        method: 'get',
+        params
+    })
+}

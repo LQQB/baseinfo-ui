@@ -1,7 +1,7 @@
 <template>
     <!-- 新增修改界面 -->
     <el-dialog title="关联考试课目"  width="40%" :visible.sync="dialogVisible" 
-    :close-on-click-modal="false" style="backgroud-color:red;" append-to-body>
+    :close-on-click-modal="false">
 
 <div>
      <el-row>
@@ -53,25 +53,9 @@ export default {
       type: String,
       default: 'mini'
     },
-    align: {  // 文本对齐方式
-      type: String,
-      default: 'left'
-    },
-  border: {  // 是否显示边框
-      type: Boolean,
-      default: false
-    },
-    stripe: {  // 是否显示斑马线
-      type: Boolean,
-      default: true
-    },
-    highlightCurrentRow: {  // // 是否高亮当前行
-      type: Boolean,
-      default: true
-    },
-    showOverflowTooltip: {  // 是否单行显示
-      type: Boolean,
-      default: true
+    testBatchId: {
+      type: Number,
+      default: '-1'
     },
   },
 
@@ -90,10 +74,16 @@ export default {
   },
   methods: {
     confirmForm: function(){
-      this.$emit('handleRelatedTestSubject', {relatedTestSubject: JSON.parse(JSON.stringify(this.selections))})
-    },
-    handleRelateTestSubject: function(){
-
+      //添加考试批次与考试课目的关联
+      let testSubjectIdS = []
+      this.selections.forEach(item => testSubjectIdS.push(item.id))
+      let params={testBatchId: this.testBatchId, testSubject:testSubjectIdS}
+      this.$api.testBatch.relatedTestSubject(params).then((res)=>{
+        this.$emit('handleRelatedTestSubject', {})
+      },(error) => {
+        this.$message({message: '操作失败, ' + error, type: 'error'})
+      })
+      
     },
     // 设置可见性
     setDialogVisible: function (visible) {
@@ -119,7 +109,6 @@ export default {
     // 选择切换
     selectionChange: function (selections) {
       this.selections = selections
-      console.log("selectionChange" + selections)
     }
   },
   mounted() {

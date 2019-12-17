@@ -185,6 +185,7 @@ function addDynamicMenuAndRoutes(userName, to, from) {
       res.data.push('sys:testbatch:relate')
       res.data.push('sys.testbatch.unrelate')
       res.data.push('sys.testbatch.testsubject.unrelate')
+      res.data.push('sys:testbatch:testsubject:relate')
       res.data.push('sys:testbatch:edit')
       res.data.push('sys:testbatch:add')
       res.data.push("trainResource.upload")
