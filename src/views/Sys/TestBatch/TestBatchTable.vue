@@ -1,11 +1,10 @@
 <template>
   <div>
     <!--表格栏-->
-    <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange" :row-style="{height:'20px'}" 
+    <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" :row-style="{height:'20px'}" 
           @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="$t('action.loading')" :border="true" :stripe="stripe"
           :show-overflow-tooltip="showOverflowTooltip" :max-height="maxHeight" :height="height" :size="size" :align="align" style="width:100%;" 
           :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-      <!-- <el-table-column type="selection" width="40" v-if="showBatchDelete & showOperation"></el-table-column> -->
       <el-table-column v-for="column in columnArray" header-align="center" align="center"
         :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
         :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter">
@@ -108,7 +107,6 @@ export default {
         pageSize: 10
       },
       loading: false,  // 加载标识
-      selections: []  // 列表选中列
     }
   },
   methods: {
@@ -121,14 +119,7 @@ export default {
       this.$emit('findPage', {pageRequest:this.pageRequest, callback:callback})
     },
     // 选择切换
-    selectionChange: function (selections) {
-      this.selections = selections
-      console.log("selectionChange" + selections)
-      this.$emit('selectionChange', {selections:selections})
-    },
-    // 选择切换
     handleCurrentChange: function (val) {
-      console.log("handleCurrentChange" + val.id)
       this.$emit('handleCurrentChange', {val:val})
     },
     // 换页刷新
@@ -143,11 +134,6 @@ export default {
     // 删除
 		handleDelete: function (index, row) {
 			this.delete(row.id)
-		},
-		// 批量删除
-		handleBatchDelete: function () {
-			let ids = this.selections.map(item => item.id).toString()
-			this.delete(ids)
 		},
 		// 删除操作
 		delete: function (ids) {

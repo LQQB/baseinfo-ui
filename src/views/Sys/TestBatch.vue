@@ -27,7 +27,7 @@
                       @handleEdit="handleEdit"> 
     </test-batch-table>
      </el-aside> 
-
+    <test-batch-dialog ref="testBatchDialog" :formData="dataForm" @submitForm="submitForm"></test-batch-dialog>
     <el-main>	
        <test-batch-related-object 
             :selectedTestBatchId="selectedTestBatchId" 
@@ -41,20 +41,18 @@
 <script>
 import KtButton from "@/views/Core/KtButton"
 import TestBatchTable from "./TestBatch/TestBatchTable"
-import TableTreeColumn from '@/views/Core/TableTreeColumn'
-import PopupTreeInput from "@/components/PopupTreeInput"
 import FaIconTooltip from "@/components/FaIconTooltip"
 import { format } from "@/utils/datetime"
 import TestBatchRelatedObject from "./TestBatch/TestBatchRelatedObject"
+import TestBatchDialog from "./TestBatch/TestBatchDialog"
 
 export default {
 	components:{
-    PopupTreeInput,
     KtButton,
     TestBatchTable,
-    TableTreeColumn,
     FaIconTooltip,
-    TestBatchRelatedObject
+    TestBatchRelatedObject,
+    TestBatchDialog
 	},
 	data() {
 		return {
@@ -70,19 +68,8 @@ export default {
       dataForm: {
         id: 0,
         labelCn: '',
-        relatedDeptId: 0,
         relatedTrainBatchId: 0
       },
-      selectedDeptId: -1,
-      popupTreeData: [],
-      popupTreeProps: {
-				label: 'name',
-				children: 'children'
-      },
-      selectedTestSubjectData: [],
-      selectedTestUserData: [],
-      selectedDeptData: [],
-      testSubjectHeight:  0,
       testBatchTableHeight: 0,
       
       selectedTestBatchName: "",
@@ -106,7 +93,6 @@ export default {
 			if(data !== null) {
 				this.pageRequest = data.pageRequest
 			}
-			this.pageRequest.columnFilters = {deptId: {name:'deptId', value:this.selectedDeptId}}
 			this.$api.testBatch.findPage(this.pageRequest).then((res) => {
 				this.pageResult = res.data
 			}).then(data!=null?data.callback:'')
@@ -120,26 +106,11 @@ export default {
         labelCn: '',
         relatedTrainBatchId: ''
       }
-      this.$refs.testBatchDialog.selectedTestSubjectData = []
-      this.$refs.testBatchDialog.selectedDeptData = []
-      this.$refs.testBatchDialog.selectedTestUserData = []
-			// this.dialogVisible = true
-			// this.dataForm = {
-      //   id: 0,
-      //   name: '',
-      //   parentId: 0,
-      //   parentName: '',
-      //   orderNum: 0
-      // }
 		},
 		// 显示编辑界面
 		handleEdit: function (row) {
       this.$refs.testBatchDialog.setDialogVisible(true)
       Object.assign(this.$refs.testBatchDialog.dataForm, row.row)
-      Object.assign(this.$refs.testBatchDialog.outterSelectedTestSubjectData, this.selectedTestSubjectData)
-      Object.assign(this.$refs.testBatchDialog.outterSelectedDeptData, this.selectedDeptData)
-      Object.assign(this.$refs.testBatchDialog.outterSelectedTestUserData, this.selectedTestUserData)
-
 		},
     // 删除
     handleDelete (row) {
@@ -156,38 +127,18 @@ export default {
 
     // 表单提交
     submitForm () {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-					this.$confirm('确认提交吗？', '提示', {}).then(() => {
-						this.editLoading = true
-            let params = Object.assign({}, this.dataForm)
-            params.relatedDeptId = this.selectedDeptId
-						this.$api.testBatch.save(params).then((res) => {
-              this.editLoading = false
-              if(res.code == 200) {
-								this.$message({ message: '操作成功', type: 'success' })
-                this.dialogVisible = false
-                this.$refs['dataForm'].resetFields()
-							} else {
-								this.$message({message: '操作失败, ' + res.msg, type: 'error'})
-							}
-							this.findPage(null)
-						},(error) => {
-              this.editLoading = false
-              this.$message({message: '操作失败, ' + error, type: 'error'})
-            })
-					})
-				}
-      })
+      this.$refs.testBatchDialog.setDialogVisible(false)
+      this.findPage(null)
     },
-		// 时间格式化
-    dateFormat: function (row, column, cellValue, index){
-      return format(row[column.property])
-    },
-
     handleTestBatchSelected: function(currentRow,oldCurrentRow){
-      this.selectedTestBatchId = currentRow.val.id
-      this.selectedTestBatchName = currentRow.val.labelCn
+      if (currentRow.val == null)
+      {
+        this.selectedTestBatchId = -1
+        this.selectedTestBatchName = "未选中考试批次"
+      }else{
+        this.selectedTestBatchId = currentRow.val.id
+        this.selectedTestBatchName = currentRow.val.labelCn
+      }
 
     },
 
@@ -211,12 +162,10 @@ offsetDis: function(obj) {
       console.log(this.offsetDis(this.$refs.testBatchTable.$el).top)
       // this.testBatchTableHeight =  window.innerHeight - this.offsetDis(this.$refs.testBatchTable.$el).top - 35;
       this.testBatchTableHeight =  window.innerHeight - 126 - 35 - 10 - 9;
-      this.testSubjectHeight = this.testBatchTableHeight - 40; 
             // 监听窗口大小变化
             let self = this;
             window.onresize = function() {
               this.testBatchTableHeight =  window.innerHeight - 126 - 35 - 10 - 9;
-              this.testSubjectHeight = this.testBatchTableHeight - 40; 
             }
         })
 	}

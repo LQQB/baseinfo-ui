@@ -11,7 +11,7 @@ export const backupBaseUrl = 'http://192.168.1.100:8002'
 let _baseUrl
 switch (process.env.NODE_ENV) {
     case 'development':
-        _baseUrl = 'http://192.168.1.102:8080'
+        _baseUrl = 'http://192.168.1.100:8080'
         break
     case 'test':
         _baseUrl = 'http://192.168.1.35test:8080/sffj'
