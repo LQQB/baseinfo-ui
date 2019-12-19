@@ -4,6 +4,7 @@ import Cookies from "js-cookie"
 import Login from '@/views/Login'
 import NotFound from '@/views/Error/404'
 import Home from '@/views/Home'
+import Main from '@/views/Main'
 import Test from '@/views/Test'
 import PlanSchedule from '@/views/PlanSchedule'
 import TrainMonitor from '@/views/TrainMonitor'
@@ -86,11 +87,11 @@ const router = new Router({
     {
       path: '/tr',
       name: '教学资源',
-      component: Home,
+      component: Main,
       children: [
         { 
           path: '', 
-          name: '教学资源', 
+          name: '系统介绍', 
           component: TrainResource,
           meta: {
             icon: 'fa fa-home fa-lg',
