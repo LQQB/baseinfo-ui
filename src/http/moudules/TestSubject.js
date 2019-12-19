@@ -45,6 +45,15 @@ export const findAllByTestBatchId = (data) => {
     })
 }
 
+// 获取所有未被考试批次所关联的考试课目
+export const findUnRelatedByTestBatchId = (data) => {
+    return axios({
+        url: '/testSubject/findUnRelatedByTestBatchId',
+        method: 'post',
+        data
+    })
+}
+
 //删除考试批次与某个考试课目的关联关系
 export const deleteRelatedTestSubject = (params) => {
     return axios({

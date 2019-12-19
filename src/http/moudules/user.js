@@ -28,6 +28,17 @@ export const findPage = (data) => {
         data
     })
 }
+
+// 通过部门id获取还没有关联到考试批次的的用户
+export const findUnRelatedByTestBatchId = (data) => {
+    return axios({
+        url: '/user/findUnRelatedByTestBatchId',
+        method: 'post',
+        data
+    })
+}
+
+
 // 查找用户的菜单权限标识集合
 export const findPermissions = (params) => {
     return axios({
@@ -37,12 +48,13 @@ export const findPermissions = (params) => {
     })
 }
 
-export const findByTestBatch = (params) => {
+export const findByTestBatch = (data) => {
         return axios({
             url: '/user/findByTestBatch',
-            method: 'get',
-            params
+            method: 'post',
+            data
         })
     
     
 }
+

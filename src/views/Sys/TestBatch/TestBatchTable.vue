@@ -9,10 +9,11 @@
         :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
         :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter">
       </el-table-column>
-      <el-table-column :label="$t('action.operation')" width="185" fixed="right" header-align="center" align="center">
+      <el-table-column :label="$t('action.operation')" ::min-width="185" fixed="right" header-align="center" align="center">
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" perms="sys:testbatch:edit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys:testbatch:delete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" label="下载成绩模板" perms="sys:testbatch:grademodel:download" :size="size" type="danger" @click="handleDownload(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -27,6 +28,7 @@
 
 <script>
 import KtButton from "@/views/Core/KtButton"
+import {download} from "@/utils/download";
 export default {
   name: 'KtTable',
   components:{
@@ -134,7 +136,14 @@ export default {
     // 删除
 		handleDelete: function (index, row) {
 			this.delete(row.id)
-		},
+    },
+    
+    // 下载考试成绩模板
+		handleDownload: function (index, row) {
+      let url = "/testBatch/download"
+			download(url,row)
+    },
+    
 		// 删除操作
 		delete: function (ids) {
 			this.$confirm('确认删除选中记录吗？', '提示', {

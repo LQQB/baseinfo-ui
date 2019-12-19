@@ -1,6 +1,6 @@
 <template>
     <!-- 新增修改界面 -->
-    <el-dialog title="关联考试课目"  width="40%" :visible.sync="dialogVisible" 
+    <el-dialog title="关联考试课目"  width="40%" :visible.sync="dialogVisible"  @open="openDialog"
     :close-on-click-modal="false">
 
 <div>
@@ -92,7 +92,8 @@ export default {
     // 分页查询
     findPage: function () {
       this.loading = true
-			this.$api.testSubject.findPage(this.pageRequest).then((res) => {
+      this.pageRequest.columnFilters = {testBatchId: {name:'testBatchId', value:this.testBatchId}}
+			this.$api.testSubject.findUnRelatedByTestBatchId(this.pageRequest).then((res) => {
         this.pageResult = res.data
         this.loading = false
 			},(error) => {
@@ -109,11 +110,11 @@ export default {
     // 选择切换
     selectionChange: function (selections) {
       this.selections = selections
+    },
+    openDialog: function(){
+      this.refreshPageRequest(1)
     }
   },
-  mounted() {
-    this.refreshPageRequest(1)
-  }
 }
 </script>
 

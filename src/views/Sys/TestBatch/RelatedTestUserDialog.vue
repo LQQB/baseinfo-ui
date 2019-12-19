@@ -1,14 +1,13 @@
 <template>
     <!-- 新增修改界面 -->
-    <el-dialog title="关联单位与考试对象"  width="80%" :visible.sync="dialogVisible" 
-    :close-on-click-modal="false" style="backgroud-color:red;" append-to-body>
+    <el-dialog title="关联考试对象"  width="80%" :visible.sync="dialogVisible" 
+    :close-on-click-modal="false" :destroy-on-close="true" @close="close">
     <el-container>
       <el-aside width="180px">
         <el-tree :data="treeData" 
                  :props="popupTreeProps" 
-                 show-checkbox 
-                 @check-change="handleCheckChange"
-                 @click="handleNodeClick"
+                 @node-click="handleNodeClick"
+                 ref="tree"
                  ></el-tree>
       </el-aside> 
       <el-main>
@@ -24,7 +23,7 @@
             </el-table-column>
             <el-table-column header-align="center" align="center" label="账户名" prop="name">
             </el-table-column>
-            <el-table-column header-align="center" align="center" label="所属单位" prop="deptId">
+            <el-table-column header-align="center" align="center" label="所属单位" prop="deptName">
             </el-table-column>
     </el-table>
         <!--分页栏-->
@@ -34,11 +33,7 @@
       </el-pagination>
     </div>              
           </el-col>
-          <el-col :span="8">
-            <fieldset style="border-Color: #eef1f6;border-width: 0.5px; text-align: left;  border-radius: 5px; font-size:12px; ">
-              <legend>已选定考试对象</legend>
-            </fieldset>  
-          </el-col>
+          
 
         </el-row>
       </el-main>
@@ -55,34 +50,18 @@
 <script>
 import KtButton from "@/views/Core/KtButton"
 export default {
-  name: 'RelatedTestDeptUserDialog',
+  name: 'RelatedTestUserDialog',
   components:{
 			KtButton
 	},
   props: {
+    testBatchId: {
+      type: Number,
+      default: '-1'
+    },
     size: { // 尺寸样式
       type: String,
       default: 'mini'
-    },
-    align: {  // 文本对齐方式
-      type: String,
-      default: 'left'
-    },
-  border: {  // 是否显示边框
-      type: Boolean,
-      default: false
-    },
-    stripe: {  // 是否显示斑马线
-      type: Boolean,
-      default: true
-    },
-    highlightCurrentRow: {  // // 是否高亮当前行
-      type: Boolean,
-      default: true
-    },
-    showOverflowTooltip: {  // 是否单行显示
-      type: Boolean,
-      default: true
     },
   },
 
@@ -93,6 +72,7 @@ export default {
 				children: 'children'
 			},
       dialogVisible: false,
+      treeData: [],
       // 分页信息
 			pageRequest: {
 				pageNum: 1,
@@ -100,15 +80,14 @@ export default {
       },
       pageResult: {},
       loading: false,  // 加载标识
-      selections: []  // 列表选中列
+      selectedDeptId: -1,//被选中部门的id
     }
   },
   methods: {
-    handleCheckChange(data, checked, indeterminate) {
-        console.log(data, checked, indeterminate);
-      },
-      handleNodeClick(data) {
-        console.log(data);
+
+    handleNodeClick(data) {
+       this.selectedDeptId = data.id
+       this.findPage()
       },
 
     		// 获取数据
@@ -130,7 +109,16 @@ export default {
       return [parent]
     },
     confirmForm: function(){
-      this.$emit('handleRelatedTestSubject', {relatedTestSubject: JSON.parse(JSON.stringify(this.selections))})
+
+      //添加考试批次与考试用户的关联
+      let testUserIdS = []
+      this.selections.forEach(item => testUserIdS.push(item.id))
+      let params={testBatchId: this.testBatchId, testUser:testUserIdS}
+      this.$api.testBatch.relatedTestUser(params).then((res)=>{
+        this.$emit('handleRelatedTestUser', {})
+      },(error) => {
+        this.$message({message: '操作失败, ' + error, type: 'error'})
+      })
     },
     handleRelateTestSubject: function(){
 
@@ -140,14 +128,15 @@ export default {
       this.dialogVisible = visible
     },
     // 分页查询
-    findPage: function () {
+    findPage: function (deptId,testBatchId) {
       this.loading = true
-			this.$api.testSubject.findPage(this.pageRequest).then((res) => {
+      this.pageRequest.columnFilters = {testBatchId: {name:'testBatchId', value:this.testBatchId},deptId: {name:'deptId',value:this.selectedDeptId}}
+			this.$api.user.findUnRelatedByTestBatchId(this.pageRequest).then((res) => {
         this.pageResult = res.data
         this.loading = false
 			},(error) => {
         this.loading = false
-        console.log(error)
+        this.$message({message: '操作失败, ' + error, type: 'error'})
       })
       
     },
@@ -159,7 +148,9 @@ export default {
     // 选择切换
     selectionChange: function (selections) {
       this.selections = selections
-      console.log("selectionChange" + selections)
+    },
+    close: function(){
+       this.pageResult = {}
     }
   },
   mounted() {

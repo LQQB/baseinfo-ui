@@ -54,3 +54,21 @@ export const unRelatedTestSubject = (params) => {
         params
     })
 }
+
+// 关联考试批次与考试用户
+export const relatedTestUser = (data) => {
+    return axios({
+        url: '/testBatch/relatedTestUser',
+        method: 'post',
+        data
+    })
+}
+
+// 解除关联考试批次与考试用户
+export const unRelatedTestUser = (params) => {
+    return axios({
+        url: '/testBatch/unRelatedTestUser',
+        method: 'get',
+        params
+    })
+}

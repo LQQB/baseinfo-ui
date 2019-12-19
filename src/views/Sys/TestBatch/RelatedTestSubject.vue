@@ -18,7 +18,7 @@
             </el-table-column>
       <el-table-column :label="$t('action.operation')" width="85" fixed="right" header-align="center" align="center">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-trash" label="移除" perms="sys.testbatch.testsubject.unrelate" :size="size" type="danger" @click="handleDeleteRelatedTestSubject(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" label="移除" perms="sys:testbatch:testsubject:unrelated" :size="size" type="danger" @click="handleDeleteRelatedTestSubject(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>

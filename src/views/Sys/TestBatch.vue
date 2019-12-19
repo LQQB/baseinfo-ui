@@ -82,8 +82,8 @@ export default {
     initColumns: function(){
 			this.columns = [
 				{prop:"id", label:"ID", minWidth:50,show: false},
-        {prop:"labelCn", label:"批次名称", minWidth:120},
-        {prop:"relatedTrainBatchLabelCn", label:"培训批次", minWidth:180},
+        {prop:"labelCn", label:"批次名称", minWidth:50},
+        {prop:"relatedTrainBatchLabelCn", label:"培训批次", minWidth:130},
 			]
 			this.filterColumns = JSON.parse(JSON.stringify(this.columns));
     },
