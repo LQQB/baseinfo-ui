@@ -6,7 +6,7 @@ import NotFound from '@/views/Error/404'
 import Home from '@/views/Home'
 import Main from '@/views/Main'
 import Test from '@/views/Test'
-import PlanSchedule from '@/views/PlanSchedule'
+
 import TrainMonitor from '@/views/TrainMonitor'
 import SysManage from '@/views/SysManage'
 import Intro from '@/views/Intro/Intro'
@@ -15,6 +15,7 @@ import api from '@/http/api'
 import store from '@/store'
 import { getIFramePath, getIFrameUrl } from '@/utils/iframe'
 import TrainResource from '@/views/TrainResource/TrainResource'
+import ScheduleOverView from '@/views/Ps/Front/ScheduleOverView'
 Vue.use(Router)
 
 const router = new Router({
@@ -43,8 +44,8 @@ const router = new Router({
       children: [
         { 
           path: '', 
-          name: '系统介绍', 
-          component: Intro,
+          name: '总览', 
+          component: ScheduleOverView,
           meta: {
             icon: 'fa fa-home fa-lg',
             index: 0

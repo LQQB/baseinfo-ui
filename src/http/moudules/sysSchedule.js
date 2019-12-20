@@ -36,3 +36,12 @@ export const findPermissions = (params) => {
         params
     })
 }
+
+// 通过部门查计划,有分页功能
+export const scheduleByDeptId = (data) => {
+    return axios({
+        url: '/sysSchedule/scheduleByDeptId',
+        method: 'post',
+        data
+    })
+}

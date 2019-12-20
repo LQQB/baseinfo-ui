@@ -92,7 +92,7 @@ export default {
 
 <style scoped lang="scss">
 .menu-bar-container {
-  position: fixed;
+  position: absolute;
   top: 0px;
   left: 0;
   bottom: 0;

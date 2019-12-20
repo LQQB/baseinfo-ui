@@ -1,6 +1,11 @@
 <template> 
   <div class="headbar" :style="{'background':themeColor}" 
     :class="$store.state.app.collapse?'position-collapse-left':'position-left'">
+        <!-- logo -->
+    <!-- <div class="logo" :style="{'background-color':themeColor}"  style="display:in-line;" :class="collapse?'menu-bar-collapse-width':'menu-bar-width'"
+      @click="$router.push('/')">
+        <img src="@/assets/logo.png"/>
+    </div>  -->
         <!-- 导航菜单 -->
     <span class="navbar">
       <el-menu :default-active="activeIndex" class="el-menu-demo" 
