@@ -126,8 +126,9 @@ export default {
   },
   mounted() {
     //this.refreshPageRequest(1)
-    this.initColumns()
     this.findTreeData()
+    this.initColumns()
+    this.selectedTab = this.scheduleCategoryTabs[0]
   }
 }
 </script>
