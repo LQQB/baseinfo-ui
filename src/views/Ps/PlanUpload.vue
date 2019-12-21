@@ -5,7 +5,7 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px">
 		 <el-form :inline="true" :model="filters" :size="size">
 			<el-form-item>
-				<kt-button icon="fa fa-search el-icon-download" :label="downLoadBtnLabel" perms="sys:role:view" type="primary" @click="handleTemplateDownload"/>
+				<kt-button icon="fa fa-search el-icon-download" :label="downLoadBtnLabel" perms="sys:plan:template.download" type="primary" @click="handleTemplateDownload"/>
 			</el-form-item>
 			<el-form-item>
               <el-upload
